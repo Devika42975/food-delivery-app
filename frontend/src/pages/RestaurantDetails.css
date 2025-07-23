@@ -1,0 +1,279 @@
+.restaurant-details {
+  padding-bottom: 3rem;
+}
+
+.restaurant-header {
+  margin-bottom: 2rem;
+}
+
+.restaurant-cover {
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+}
+
+.restaurant-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.restaurant-header-content {
+  padding: 1.5rem 0;
+}
+
+.restaurant-header-content h1 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.restaurant-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.restaurant-cuisine {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.restaurant-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stars {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.star-filled {
+  color: #ffc107;
+}
+
+.star-empty {
+  color: #ddd;
+}
+
+.rating-count {
+  color: #666;
+}
+
+.restaurant-price {
+  font-weight: bold;
+}
+
+.restaurant-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+}
+
+.info-item a {
+  color: var(--primary-color);
+}
+
+.restaurant-description {
+  margin-bottom: 2rem;
+}
+
+.restaurant-description h2 {
+  margin-bottom: 1rem;
+}
+
+.menu-section {
+  margin-bottom: 3rem;
+}
+
+.menu-section h2 {
+  margin-bottom: 1.5rem;
+}
+
+.menu-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.category-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 20px;
+  transition: all 0.3s;
+}
+
+.category-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.menu-item {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item-image {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.menu-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.menu-item-content {
+  flex: 1;
+}
+
+.menu-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.menu-item-header h3 {
+  margin: 0;
+}
+
+.menu-item-price {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.menu-item-description {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.menu-item-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.vegetarian {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.vegan {
+  background-color: #e0f2f1;
+  color: #00796b;
+}
+
+.gluten-free {
+  background-color: #fff8e1;
+  color: #ff8f00;
+}
+
+.spicy {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.add-to-cart-btn {
+  padding: 0.5rem 1rem;
+}
+
+.reviews-section {
+  margin-top: 3rem;
+}
+
+.reviews-section h2 {
+  margin-bottom: 1.5rem;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.review-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.reviewer-info h4 {
+  margin: 0;
+  margin-bottom: 0.2rem;
+}
+
+.review-date {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.review-comment {
+  color: #333;
+}
+
+.no-reviews {
+  color: #666;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .restaurant-cover {
+    height: 200px;
+  }
+
+  .menu-item {
+    flex-direction: column;
+  }
+
+  .menu-item-image {
+    width: 100%;
+    height: 180px;
+  }
+}
