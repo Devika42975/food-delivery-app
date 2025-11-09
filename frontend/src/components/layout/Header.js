@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaShoppingCart, FaUser, FaBars, FaTimes } from 'react-icons/fa';
+import { FaShoppingCart, FaUser, FaBars, FaTimes, FaHeart } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import './Header.css';
@@ -24,7 +24,8 @@ const Header = () => {
     <header className="header">
       <div className="container header-container">
         <Link to="/" className="logo">
-          FoodDelivery
+          <span className="logo-text">QuickBite</span>
+          <span className="logo-tagline">Fast Food Delivery</span>
         </Link>
 
         <div className="mobile-toggle" onClick={toggleMenu}>
@@ -35,6 +36,11 @@ const Header = () => {
           <ul>
             <li>
               <Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            </li>
+            <li>
+              <Link to="/favorites" onClick={() => setIsMenuOpen(false)}>
+                <FaHeart /> Favorites
+              </Link>
             </li>
             {isAuthenticated ? (
               <>

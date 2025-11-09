@@ -18,8 +18,8 @@ const Cart = () => {
   };
 
   // Convert dollar prices to rupees
-  const totalInRupees = total * 75;
-  const deliveryFee = cart.items.length > 0 ? 40 : 0; // Delivery fee in rupees
+  const totalInRupees = total * 15;
+  const deliveryFee = cart.items.length > 0 ? 20 : 0; // Delivery fee in rupees
   const taxInRupees = totalInRupees * 0.05; // 5% GST
   const grandTotal = totalInRupees + deliveryFee + taxInRupees;
 
@@ -56,7 +56,7 @@ const Cart = () => {
                 <div key={item._id} className="cart-item">
                   <div className="item-details">
                     <h4>{item.name}</h4>
-                    <div className="item-price">₹{(item.price * 75).toFixed(0)}</div>
+                    <div className="item-price">₹{(item.price * 15).toFixed(0)}</div>
                   </div>
 
                   <div className="item-actions">
@@ -86,19 +86,19 @@ const Cart = () => {
             <div className="cart-summary">
               <div className="summary-row">
                 <span>Subtotal</span>
-                <span>₹{totalInRupees.toFixed(0)}</span>
+                <span>{totalInRupees.toFixed(0)}</span>
               </div>
               <div className="summary-row">
                 <span>Delivery Fee</span>
-                <span>₹{deliveryFee}</span>
+                <span>{deliveryFee}</span>
               </div>
               <div className="summary-row">
                 <span>GST (5%)</span>
-                <span>₹{taxInRupees.toFixed(0)}</span>
+                <span>{taxInRupees.toFixed(0)}</span>
               </div>
               <div className="summary-row total">
                 <span>Total</span>
-                <span>₹{grandTotal.toFixed(0)}</span>
+                <span>{grandTotal.toFixed(0)}</span>
               </div>
             </div>
 

@@ -1,692 +1,368 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { FaSearch, FaStar, FaFilter, FaList, FaTh } from 'react-icons/fa';
-import RestaurantList from '../components/RestaurantList';
+import { FaSearch, FaStar, FaFilter, FaList, FaTh, FaHeart, FaClock, FaMapMarkerAlt } from 'react-icons/fa';
+import api from '../utils/api';
 import RestaurantImage from '../components/RestaurantImage';
-// import { convertPriceRanges } from '../utils/priceRangeConverter';
-import '../components/RestaurantList.css';
+import { useFavorites } from '../context/FavoritesContext';
 import './Home.css';
 
 const Home = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     cuisine: '',
     priceRange: '',
     rating: '',
+    location: ''
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState('grid');
+  const [darkMode, setDarkMode] = useState(false);
+  const [sortBy, setSortBy] = useState('relevance');
+  const { isFavorite, toggleFavorite } = useFavorites();
 
-  // Restaurant data for the application
-  const mockRestaurants = [
-    {
-      _id: 'rest1',
-      name: 'Tiamo',
-      cuisine: ['Italian', 'European'],
-      priceRange: '₹₹₹',
-      rating: 4.6,
-      numReviews: 150,
-      images: ['https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest2',
-      name: 'Shri Sagar CTR',
-      cuisine: ['South Indian', 'Vegetarian'],
-      priceRange: '₹',
-      rating: 4.5,
-      numReviews: 200,
-      images: ['https://images.unsplash.com/photo-1589301760014-d929f3979dbc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest3',
-      name: 'Kuuraku',
-      cuisine: ['Japanese', 'Asian'],
-      priceRange: '₹₹',
-      rating: 4.4,
-      numReviews: 120,
-      images: ['https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest4',
-      name: 'Geist Brewing Co., OMR',
-      cuisine: ['Brewery', 'Continental'],
-      priceRange: '₹₹₹',
-      rating: 4.3,
-      numReviews: 180,
-      images: ['https://images.unsplash.com/photo-1559526324-593bc073d938?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest5',
-      name: 'Bang At The Ritz-Carlton',
-      cuisine: ['Fine Dining', 'Multi-cuisine'],
-      priceRange: '₹₹₹₹',
-      rating: 4.8,
-      numReviews: 160,
-      images: ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest6',
-      name: 'Bob\'s',
-      cuisine: ['American', 'Bar'],
-      priceRange: '₹₹',
-      rating: 4.2,
-      numReviews: 110,
-      images: ['https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest7',
-      name: 'Roxie',
-      cuisine: ['Continental', 'Bar'],
-      priceRange: '₹₹',
-      rating: 4.1,
-      numReviews: 95,
-      images: ['https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest8',
-      name: 'The 13th Floor',
-      cuisine: ['Continental', 'Rooftop'],
-      priceRange: '₹₹₹',
-      rating: 4.5,
-      numReviews: 140,
-      images: ['https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest9',
-      name: 'Toit',
-      cuisine: ['Brewery', 'Continental'],
-      priceRange: '₹₹',
-      rating: 4.4,
-      numReviews: 190,
-      images: ['https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest10',
-      name: 'Hype',
-      cuisine: ['Bar', 'Multi-cuisine'],
-      priceRange: '₹₹',
-      rating: 4.0,
-      numReviews: 85,
-      images: ['https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest11',
-      name: 'Arbor Brewing Company',
-      cuisine: ['Brewery', 'American'],
-      priceRange: '₹₹',
-      rating: 4.3,
-      numReviews: 130,
-      images: ['https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest12',
-      name: 'Byg Brewski Brewing Co.',
-      cuisine: ['Brewery', 'Continental'],
-      priceRange: '₹₹₹',
-      rating: 4.5,
-      numReviews: 170,
-      images: ['https://images.unsplash.com/photo-1559526324-593bc073d938?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest13',
-      name: 'Olive Beach',
-      cuisine: ['Mediterranean', 'European'],
-      priceRange: '₹₹₹',
-      rating: 4.6,
-      numReviews: 145,
-      images: ['https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest14',
-      name: 'Wabi Sabi',
-      cuisine: ['Japanese', 'Asian'],
-      priceRange: '₹₹₹',
-      rating: 4.4,
-      numReviews: 115,
-      images: ['https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest15',
-      name: 'Skyye',
-      cuisine: ['Rooftop', 'Bar'],
-      priceRange: '₹₹₹',
-      rating: 4.3,
-      numReviews: 125,
-      images: ['https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest16',
-      name: 'Blue Ginger',
-      cuisine: ['Vietnamese', 'Asian'],
-      priceRange: '₹₹₹',
-      rating: 4.5,
-      numReviews: 135,
-      images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest17',
-      name: 'Phobidden Fruit',
-      cuisine: ['Vietnamese', 'Asian'],
-      priceRange: '₹₹',
-      rating: 4.2,
-      numReviews: 90,
-      images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest18',
-      name: 'Windmills',
-      cuisine: ['Brewery', 'Continental'],
-      priceRange: '₹₹₹',
-      rating: 4.4,
-      numReviews: 140,
-      images: ['https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest19',
-      name: 'Oota',
-      cuisine: ['Karnataka', 'Regional'],
-      priceRange: '₹₹',
-      rating: 4.3,
-      numReviews: 110,
-      images: ['https://images.unsplash.com/photo-1589301760014-d929f3979dbc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest20',
-      name: 'Karavalli',
-      cuisine: ['Coastal', 'Seafood'],
-      priceRange: '₹₹₹',
-      rating: 4.7,
-      numReviews: 160,
-      images: ['https://images.unsplash.com/photo-1579684947550-22e945225d9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest21',
-      name: 'Sunny\'s',
-      cuisine: ['Continental', 'European'],
-      priceRange: '₹₹₹',
-      rating: 4.5,
-      numReviews: 130,
-      images: ['https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest22',
-      name: 'Toast & Tonic',
-      cuisine: ['European', 'Bar'],
-      priceRange: '₹₹₹',
-      rating: 4.4,
-      numReviews: 120,
-      images: ['https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest23',
-      name: 'Daysie - All Day Casual Bar',
-      cuisine: ['Bar', 'Continental'],
-      priceRange: '₹₹',
-      rating: 4.2,
-      numReviews: 95,
-      images: ['https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest24',
-      name: 'Social',
-      cuisine: ['Bar', 'Multi-cuisine'],
-      priceRange: '₹₹',
-      rating: 4.3,
-      numReviews: 140,
-      images: ['https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest25',
-      name: 'Yataii',
-      cuisine: ['Japanese', 'Asian'],
-      priceRange: '₹₹₹₹',
-      rating: 4.6,
-      numReviews: 110,
-      images: ['https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest26',
-      name: 'Thai Basil',
-      cuisine: ['Thai', 'Asian'],
-      priceRange: '₹₹',
-      rating: 4.3,
-      numReviews: 100,
-      images: ['https://images.unsplash.com/photo-1559314809-0d155014e29e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest27',
-      name: 'ZLB23',
-      cuisine: ['Bar', 'Multi-cuisine'],
-      priceRange: '₹₹₹',
-      rating: 4.1,
-      numReviews: 85,
-      images: ['https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest28',
-      name: 'Rim Naam',
-      cuisine: ['Thai', 'Asian'],
-      priceRange: '₹₹₹',
-      rating: 4.5,
-      numReviews: 120,
-      images: ['https://images.unsplash.com/photo-1559314809-0d155014e29e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest29',
-      name: 'Jamming Goat 3.0',
-      cuisine: ['Bar', 'Continental'],
-      priceRange: '₹₹',
-      rating: 4.2,
-      numReviews: 90,
-      images: ['https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest30',
-      name: 'Nasi and Mee',
-      cuisine: ['Malaysian', 'Asian'],
-      priceRange: '₹₹',
-      rating: 4.4,
-      numReviews: 105,
-      images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest31',
-      name: 'Navu Project',
-      cuisine: ['Modern Indian', 'Fusion'],
-      priceRange: '₹₹₹',
-      rating: 4.5,
-      numReviews: 95,
-      images: ['https://images.unsplash.com/photo-1585937421612-70a008356cf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest32',
-      name: 'Naru Noodle Bar',
-      cuisine: ['Korean', 'Asian'],
-      priceRange: '₹₹',
-      rating: 4.3,
-      numReviews: 85,
-      images: ['https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest33',
-      name: 'Burma Burma',
-      cuisine: ['Burmese', 'Asian'],
-      priceRange: '₹₹',
-      rating: 4.4,
-      numReviews: 110,
-      images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest34',
-      name: 'Arirang',
-      cuisine: ['Korean', 'Asian'],
-      priceRange: '₹₹₹',
-      rating: 4.5,
-      numReviews: 100,
-      images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest35',
-      name: 'Far & East',
-      cuisine: ['Pan-Asian', 'Fine Dining'],
-      priceRange: '₹₹₹₹',
-      rating: 4.7,
-      numReviews: 120,
-      images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest36',
-      name: 'The Konkan',
-      cuisine: ['Coastal', 'Seafood'],
-      priceRange: '₹₹',
-      rating: 4.4,
-      numReviews: 95,
-      images: ['https://images.unsplash.com/photo-1579684947550-22e945225d9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest37',
-      name: 'Fishland',
-      cuisine: ['Seafood', 'Coastal'],
-      priceRange: '₹₹',
-      rating: 4.3,
-      numReviews: 85,
-      images: ['https://images.unsplash.com/photo-1579684947550-22e945225d9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest38',
-      name: 'Loya',
-      cuisine: ['North Indian', 'Fine Dining'],
-      priceRange: '₹₹₹',
-      rating: 4.6,
-      numReviews: 110,
-      images: ['https://images.unsplash.com/photo-1585937421612-70a008356cf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest39',
-      name: 'Alba',
-      cuisine: ['Italian', 'European'],
-      priceRange: '₹₹₹₹',
-      rating: 4.7,
-      numReviews: 130,
-      images: ['https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest40',
-      name: 'Le Cirque',
-      cuisine: ['French', 'Fine Dining'],
-      priceRange: '₹₹₹₹',
-      rating: 4.8,
-      numReviews: 140,
-      images: ['https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest41',
-      name: 'Persian Terrace',
-      cuisine: ['Middle Eastern', 'Mediterranean'],
-      priceRange: '₹₹₹',
-      rating: 4.5,
-      numReviews: 115,
-      images: ['https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest42',
-      name: '23rd Street Pizza',
-      cuisine: ['Italian', 'Pizza'],
-      priceRange: '₹₹',
-      rating: 4.2,
-      numReviews: 95,
-      images: ['https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest43',
-      name: 'Muro',
-      cuisine: ['Italian', 'European'],
-      priceRange: '₹₹₹',
-      rating: 4.4,
-      numReviews: 105,
-      images: ['https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest44',
-      name: 'SodaBottleOpenerwala',
-      cuisine: ['Parsi', 'Indian'],
-      priceRange: '₹₹',
-      rating: 4.3,
-      numReviews: 120,
-      images: ['https://images.unsplash.com/photo-1585937421612-70a008356cf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest45',
-      name: 'The Biere Club',
-      cuisine: ['Brewery', 'Continental'],
-      priceRange: '₹₹',
-      rating: 4.2,
-      numReviews: 110,
-      images: ['https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest46',
-      name: 'Cajsa',
-      cuisine: ['Pizza', 'Italian'],
-      priceRange: '₹₹',
-      rating: 4.1,
-      numReviews: 85,
-      images: ['https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest47',
-      name: 'The Bier Library',
-      cuisine: ['Brewery', 'Continental'],
-      priceRange: '₹₹',
-      rating: 4.3,
-      numReviews: 100,
-      images: ['https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest48',
-      name: 'Nagarjuna',
-      cuisine: ['Andhra', 'South Indian'],
-      priceRange: '₹₹',
-      rating: 4.5,
-      numReviews: 150,
-      images: ['https://images.unsplash.com/photo-1589301760014-d929f3979dbc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest49',
-      name: 'Foo',
-      cuisine: ['Asian', 'Chinese'],
-      priceRange: '₹₹₹',
-      rating: 4.4,
-      numReviews: 110,
-      images: ['https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    },
-    {
-      _id: 'rest50',
-      name: 'Lucky Chan',
-      cuisine: ['Chinese', 'Asian'],
-      priceRange: '₹₹₹',
-      rating: 4.3,
-      numReviews: 95,
-      images: ['https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
-    }
-  ];
+  // Enhanced location mapping for restaurants
+  const getLocationForRestaurant = (restaurantId, name) => {
+    const locations = [
+      'Koramangala', 'Indiranagar', 'Whitefield', 'Malleshwaram', 'UB City', 'OMR',
+      'HSR Layout', 'BTM Layout', 'Jayanagar', 'Rajajinagar', 'Marathahalli',
+      'Electronic City', 'Banashankari', 'JP Nagar', 'Yelahanka', 'Hebbal'
+    ];
+    const hash = restaurantId.charCodeAt(restaurantId.length - 1) || 0;
+    return locations[hash % locations.length];
+  };
 
-  // Initialize restaurants with all mock data on component mount
+  // Enhanced delivery time calculation
+  const getDeliveryTime = (priceRange, location) => {
+    const baseTimes = {
+      '$': ['15-25 min', '20-30 min'],
+      '$$': ['20-30 min', '25-35 min'],
+      '$$$': ['25-35 min', '30-40 min'],
+      '$$$$': ['30-40 min', '35-45 min']
+    };
+    const times = baseTimes[priceRange] || baseTimes['$$'];
+    return times[Math.random() > 0.5 ? 1 : 0];
+  };
+
+  // Convert price range from $ to readable labels
+  const convertPriceRange = (priceRange) => {
+    const conversion = {
+      '$': 'Affordable',
+      '$$': 'Mid-range',
+      '$$$': 'Premium',
+      '$$$$': 'Luxury'
+    };
+    return conversion[priceRange] || 'Mid-range';
+  };
+
   useEffect(() => {
-    setRestaurants(mockRestaurants);
-    setLoading(false);
-  }, []);
-
-  // Filter restaurants when search term or filters change
-  useEffect(() => {
-    if (searchTerm === '' && !filters.cuisine && !filters.priceRange && !filters.rating) {
-      // If no filters are applied, show all restaurants
-      setRestaurants(mockRestaurants);
-      return;
-    }
-
-    const filterRestaurants = () => {
+    const fetchRestaurants = async () => {
       try {
         setLoading(true);
-        // Filter mock data based on search and filters
-        let filteredMockData = [...mockRestaurants];
+        const response = await api.get('/restaurants?limit=50');
         
-        // Apply search term filter
-        if (searchTerm) {
-          const term = searchTerm.toLowerCase();
-          filteredMockData = filteredMockData.filter(restaurant => 
-            restaurant.name.toLowerCase().includes(term) || 
-            restaurant.cuisine.some(c => c.toLowerCase().includes(term))
-          );
+        if (response.data.success && response.data.data) {
+          // Enhance restaurant data with additional fields
+          const enhancedRestaurants = response.data.data.map(restaurant => {
+            const location = getLocationForRestaurant(restaurant._id, restaurant.name);
+            const priceRange = convertPriceRange(restaurant.priceRange);
+            const deliveryTime = getDeliveryTime(restaurant.priceRange, location);
+            const isTopPick = restaurant.rating >= 4.5 && restaurant.numReviews >= 100;
+            
+            return {
+              ...restaurant,
+              location,
+              deliveryTime,
+              isTopPick,
+              priceRange,
+              image: restaurant.images && restaurant.images[0] ? restaurant.images[0] : 
+                     `https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80`
+            };
+          });
+          
+          setRestaurants(enhancedRestaurants);
+        } else {
+          console.warn('No restaurant data received from API');
+          setRestaurants([]);
         }
-        
-        // Apply cuisine filter
-        if (filters.cuisine) {
-          filteredMockData = filteredMockData.filter(restaurant => 
-            restaurant.cuisine.includes(filters.cuisine)
-          );
-        }
-        
-        // Apply price range filter
-        if (filters.priceRange) {
-          filteredMockData = filteredMockData.filter(restaurant => 
-            restaurant.priceRange === filters.priceRange
-          );
-        }
-        
-        // Apply rating filter
-        if (filters.rating) {
-          const minRating = parseInt(filters.rating);
-          filteredMockData = filteredMockData.filter(restaurant => 
-            restaurant.rating >= minRating
-          );
-        }
-        
-        setRestaurants(filteredMockData);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error filtering restaurants:', err);
+      } catch (error) {
+        console.error('Error fetching restaurants:', error);
+        setRestaurants([]);
+      } finally {
         setLoading(false);
       }
     };
 
-    // Use a timeout to debounce the filtering
-    const timeoutId = setTimeout(() => {
-      filterRestaurants();
-    }, 300);
+    fetchRestaurants();
+  }, []);
 
-    return () => clearTimeout(timeoutId);
-  }, [searchTerm, filters.cuisine, filters.priceRange, filters.rating]);
+  // Filter and sort restaurants
+  const filteredAndSortedRestaurants = restaurants
+    .filter(restaurant => {
+      const matchesSearch = restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           (restaurant.cuisine && restaurant.cuisine.some(c => c.toLowerCase().includes(searchTerm.toLowerCase())));
+      const matchesCuisine = !filters.cuisine || (restaurant.cuisine && restaurant.cuisine.includes(filters.cuisine));
+      const matchesPrice = !filters.priceRange || restaurant.priceRange === filters.priceRange;
+      const matchesRating = !filters.rating || restaurant.rating >= parseFloat(filters.rating);
+      const matchesLocation = !filters.location || (restaurant.location && restaurant.location.toLowerCase().includes(filters.location.toLowerCase()));
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const toggleFilters = () => {
-    setShowFilters(!showFilters);
-  };
-
-  const resetFilters = () => {
-    setFilters({
-      cuisine: '',
-      priceRange: '',
-      rating: '',
+      return matchesSearch && matchesCuisine && matchesPrice && matchesRating && matchesLocation;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'rating':
+          return b.rating - a.rating;
+        case 'delivery':
+          return parseInt(a.deliveryTime) - parseInt(b.deliveryTime);
+        case 'cost':
+          const priceOrder = { 'Affordable': 1, 'Mid-range': 2, 'Premium': 3, 'Luxury': 4 };
+          return priceOrder[a.priceRange] - priceOrder[b.priceRange];
+        case 'relevance':
+        default:
+          return (b.rating * 0.4 + b.numReviews * 0.0001 + (b.isTopPick ? 1 : 0) * 0.6) - 
+                 (a.rating * 0.4 + a.numReviews * 0.0001 + (a.isTopPick ? 1 : 0) * 0.6);
+      }
     });
-  };
 
-  // Cuisine options for filtering
-  const cuisines = ['Italian', 'Chinese', 'Indian', 'Japanese', 'Thai', 'American', 'Continental', 'Asian', 'Bar', 'Brewery', 'Seafood', 'European', 'Mediterranean', 'Korean', 'Vietnamese', 'Fine Dining'];
-  const priceRanges = ['₹', '₹₹', '₹₹₹', '₹₹₹₹'];
+  const topPickRestaurants = restaurants.filter(r => r.isTopPick);
+
+
+
+  // Dynamic filter options based on available restaurants
+  const cuisines = [...new Set(restaurants.flatMap(r => r.cuisine || []))].sort();
+  const priceRanges = ['Affordable', 'Mid-range', 'Premium', 'Luxury'];
+  const locations = [...new Set(restaurants.map(r => r.location).filter(Boolean))].sort();
 
   if (loading) {
-    return <div className="loading">Loading restaurants...</div>;
-  }
-
-  if (error) {
-    return <div className="error">{error}</div>;
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Finding the best restaurants for you...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="home-page">
-      <section className="hero">
+    <div className={`home-page ${darkMode ? 'dark-mode' : ''}`}>
+      {/* Hero Section */}
+      <section className="hero-section">
         <div className="hero-content">
-          <h1>Delicious Food Delivered To Your Door</h1>
-          <p>Order from your favorite restaurants and enjoy at home</p>
+          <div className="hero-text">
+            <h1>
+              <span className="brand-name">QuickBite</span>
+              <span className="tagline">Discover great food & restaurants</span>
+            </h1>
+            <p>Order from your favorite restaurants and get it delivered fast</p>
+          </div>
+          
           <div className="search-container">
-            <div className="search-input">
+            <div className="search-box">
               <FaSearch className="search-icon" />
               <input
                 type="text"
-                placeholder="Search for restaurants or cuisines..."
+                placeholder="Search for restaurants, cuisines..."
                 value={searchTerm}
-                onChange={handleSearchChange}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <div className="search-buttons">
-              <button className="view-button" onClick={() => setViewMode('grid')} title="Grid View">
-                <FaTh className={viewMode === 'grid' ? 'active' : ''} />
-              </button>
-              <button className="view-button" onClick={() => setViewMode('list')} title="List View">
-                <FaList className={viewMode === 'list' ? 'active' : ''} />
-              </button>
-              <button className="filter-button" onClick={toggleFilters}>
+            
+            <div className="search-controls">
+              <button 
+                className={`filter-btn ${showFilters ? 'active' : ''}`}
+                onClick={() => setShowFilters(!showFilters)}
+              >
                 <FaFilter /> Filters
+              </button>
+              
+              <div className="view-controls">
+                <button 
+                  className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                  onClick={() => setViewMode('grid')}
+                >
+                  <FaTh />
+                </button>
+                <button 
+                  className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+                  onClick={() => setViewMode('list')}
+                >
+                  <FaList />
+                </button>
+              </div>
+              
+              <button 
+                className="dark-mode-btn"
+                onClick={() => setDarkMode(!darkMode)}
+              >
+                {darkMode ? '☀️' : '🌙'}
               </button>
             </div>
           </div>
 
+          {/* Filters Panel */}
           {showFilters && (
-            <div className="filters">
+            <div className="filters-panel">
               <div className="filter-group">
                 <label>Cuisine</label>
-                <select
-                  name="cuisine"
-                  value={filters.cuisine}
-                  onChange={handleFilterChange}
+                <select 
+                  value={filters.cuisine} 
+                  onChange={(e) => setFilters({...filters, cuisine: e.target.value})}
                 >
                   <option value="">All Cuisines</option>
-                  {cuisines.map((cuisine) => (
-                    <option key={cuisine} value={cuisine}>
-                      {cuisine}
-                    </option>
+                  {cuisines.map(cuisine => (
+                    <option key={cuisine} value={cuisine}>{cuisine}</option>
                   ))}
                 </select>
               </div>
-
+              
               <div className="filter-group">
                 <label>Price Range</label>
-                <select
-                  name="priceRange"
-                  value={filters.priceRange}
-                  onChange={handleFilterChange}
+                <select 
+                  value={filters.priceRange} 
+                  onChange={(e) => setFilters({...filters, priceRange: e.target.value})}
                 >
-                  <option value="">All Price Ranges</option>
-                  {priceRanges.map((price) => (
-                    <option key={price} value={price}>
-                      {price}
-                    </option>
+                  <option value="">All Prices</option>
+                  {priceRanges.map(price => (
+                    <option key={price} value={price}>{price}</option>
                   ))}
                 </select>
               </div>
-
+              
               <div className="filter-group">
                 <label>Rating</label>
-                <select
-                  name="rating"
-                  value={filters.rating}
-                  onChange={handleFilterChange}
+                <select 
+                  value={filters.rating} 
+                  onChange={(e) => setFilters({...filters, rating: e.target.value})}
                 >
                   <option value="">All Ratings</option>
-                  <option value="4">4+ Stars</option>
-                  <option value="3">3+ Stars</option>
-                  <option value="2">2+ Stars</option>
+                  <option value="4.5">4.5+ Stars</option>
+                  <option value="4.0">4.0+ Stars</option>
+                  <option value="3.5">3.5+ Stars</option>
                 </select>
               </div>
-
-              <button className="reset-button" onClick={resetFilters}>
-                Reset Filters
+              
+              <div className="filter-group">
+                <label>Location</label>
+                <select 
+                  value={filters.location} 
+                  onChange={(e) => setFilters({...filters, location: e.target.value})}
+                >
+                  <option value="">All Locations</option>
+                  {locations.map(location => (
+                    <option key={location} value={location}>{location}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <button 
+                className="reset-filters-btn"
+                onClick={() => setFilters({cuisine: '', priceRange: '', rating: '', location: ''})}
+              >
+                Reset All
               </button>
             </div>
           )}
         </div>
       </section>
 
-      <section className="restaurant-list">
-        <h2>Popular Restaurants Near You</h2>
-        {restaurants.length === 0 ? (
-          <div className="no-results">No restaurants found matching your criteria</div>
+      {/* Top Picks Carousel */}
+      <section className="top-picks-section">
+        <h2>🔥 Top Picks for You</h2>
+        <div className="top-picks-carousel">
+          {topPickRestaurants.map(restaurant => (
+            <Link 
+              key={restaurant._id} 
+              to={`/restaurants/${restaurant._id}`} 
+              className="top-pick-card"
+            >
+              <div className="pick-image">
+                <RestaurantImage restaurant={restaurant} className="pick-image-img" />
+                <div className="pick-badge">Top Pick</div>
+              </div>
+              <div className="pick-info">
+                <h3>{restaurant.name}</h3>
+                <div className="pick-meta">
+                  <span className="rating">
+                    <FaStar /> {restaurant.rating}
+                  </span>
+                  <span className="delivery-time">
+                    <FaClock /> {restaurant.deliveryTime}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Restaurants List */}
+      <section className="restaurants-section">
+        <div className="section-header">
+          <h2>All Restaurants ({filteredAndSortedRestaurants.length})</h2>
+          <div className="sort-options">
+            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <option value="relevance">Sort by Relevance</option>
+              <option value="rating">Rating: High to Low</option>
+              <option value="delivery">Delivery Time</option>
+              <option value="cost">Cost: Low to High</option>
+            </select>
+          </div>
+        </div>
+
+        {filteredAndSortedRestaurants.length === 0 ? (
+          <div className="no-results">
+            <h3>No restaurants found</h3>
+            <p>Try adjusting your filters or search terms</p>
+          </div>
         ) : (
-          <div className={viewMode === 'grid' ? 'restaurant-grid' : 'restaurant-list-view'}>
-            {restaurants.map((restaurant) => (
-              <Link to={`/restaurants/${restaurant._id}`} key={restaurant._id} className="restaurant-card">
-                <div className="restaurant-image">
-                  <img src={restaurant.images[0]} alt={restaurant.name} />
-                </div>
-                <div className="restaurant-info">
-                  <h3>{restaurant.name}</h3>
-                  <div className="restaurant-meta">
-                    <span>{restaurant.cuisine.join(', ')}</span>
-                    <span>{restaurant.priceRange}</span>
+          <div className={`restaurants-grid ${viewMode}`}>
+            {filteredAndSortedRestaurants.map(restaurant => (
+              <div key={restaurant._id} className="restaurant-card">
+                <Link to={`/restaurants/${restaurant._id}`} className="card-link">
+                  <div className="card-image">
+                    <RestaurantImage restaurant={restaurant} className="card-image-img" />
+                    <button 
+                      className={`favorite-btn ${isFavorite(restaurant._id) ? 'active' : ''}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleFavorite(restaurant);
+                      }}
+                    >
+                      <FaHeart />
+                    </button>
                   </div>
-                  <div className="restaurant-rating">
-                    <FaStar className="star-icon" />
-                    <span>{restaurant.rating}</span>
-                    <span className="review-count">({restaurant.numReviews} reviews)</span>
+                  
+                  <div className="card-content">
+                    <div className="card-header">
+                      <h3>{restaurant.name}</h3>
+                      <div className="rating">
+                        <FaStar className="star" />
+                        <span>{restaurant.rating}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="card-meta">
+                      <span className="cuisine">{restaurant.cuisine && Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(', ') : restaurant.cuisine || 'Multi-cuisine'}</span>
+                      <span className="price">{restaurant.priceRange}</span>
+                    </div>
+                    
+                    <div className="card-footer">
+                      <div className="location">
+                        <FaMapMarkerAlt />
+                        <span>{restaurant.location}</span>
+                      </div>
+                      <div className="delivery-info">
+                        <FaClock />
+                        <span>{restaurant.deliveryTime}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="reviews-count">
+                      {restaurant.numReviews} reviews
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </div>
             ))}
           </div>
         )}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useOrder } from '../context/OrderContext';
+import { formatPriceInRupees } from '../utils/currencyUtils';
 import { FaCheckCircle, FaHourglass, FaMotorcycle, FaUtensils } from 'react-icons/fa';
 import './OrderTracking.css';
 
@@ -81,8 +82,8 @@ const OrderTracking = () => {
   const total = order.total || 0;
   const subtotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   // Convert dollar prices to rupees
-  const subtotalInRupees = subtotal * 75;
-  const deliveryFee = 40; // Delivery fee in rupees
+  const subtotalInRupees = subtotal * 15;
+  const deliveryFee = 20; // Delivery fee in rupees
   const taxInRupees = subtotalInRupees * 0.05; // 5% GST
   const totalInRupees = subtotalInRupees + deliveryFee + taxInRupees;
 
@@ -143,7 +144,7 @@ const OrderTracking = () => {
                     <span className="item-quantity">{item.quantity}x</span>
                     <span className="item-name">{item.name}</span>
                   </div>
-                  <span className="item-price">₹{(item.price * item.quantity * 75).toFixed(0)}</span>
+                  <span className="item-price">{formatPriceInRupees(item.price * item.quantity)}</span>
                 </div>
               ))}
             </div>

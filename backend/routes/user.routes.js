@@ -1,7 +1,16 @@
 const express = require('express');
 const { protect, authorize } = require('../middleware/auth');
+const { addFavorite, removeFavorite, getFavorites } = require('../controllers/user.controller');
 
 const router = express.Router();
+
+// Favorites routes
+router.route('/me/favorites')
+  .get(protect, getFavorites);
+
+router.route('/me/favorites/:restaurantId')
+  .post(protect, addFavorite)
+  .delete(protect, removeFavorite);
 
 // These routes will be implemented with their controllers
 router.route('/')

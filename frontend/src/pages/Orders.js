@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useOrder } from '../context/OrderContext';
 import { useAuth } from '../context/AuthContext';
+import { FaStar, FaClock, FaMapMarkerAlt, FaMotorcycle, FaCheckCircle, FaUtensils } from 'react-icons/fa';
 import './Orders.css';
 
 const Orders = () => {
   const { orders } = useOrder();
   const { isAuthenticated } = useAuth();
+  const [filter, setFilter] = useState('all');
 
-  // Orders are now coming directly from OrderContext
-
-  // Helper function to format date
   const formatDate = (dateString) => {
     const options = { 
       year: 'numeric', 
@@ -22,50 +21,142 @@ const Orders = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Helper function to get status badge class
-  const getStatusBadgeClass = (status) => {
+  const getStatusIcon = (status) => {
     switch (status) {
       case 'pending':
-        return 'status-pending';
-      case 'confirmed':
-        return 'status-confirmed';
+        return <FaClock className="status-icon pending" />;
       case 'preparing':
-        return 'status-preparing';
+        return <FaUtensils className="status-icon preparing" />;
       case 'out_for_delivery':
-        return 'status-out-for-delivery';
+        return <FaMotorcycle className="status-icon delivery" />;
       case 'delivered':
-        return 'status-delivered';
-      case 'cancelled':
-        return 'status-cancelled';
+        return <FaCheckCircle className="status-icon delivered" />;
       default:
-        return '';
+        return <FaClock className="status-icon" />;
     }
   };
 
-  // No need for loading state as we're using context
+  const getStatusProgress = (status) => {
+    switch (status) {
+      case 'pending': return 25;
+      case 'preparing': return 50;
+      case 'out_for_delivery': return 75;
+      case 'delivered': return 100;
+      default: return 0;
+    }
+  };
+
+  const filteredOrders = orders.filter(order => {
+    if (filter === 'all') return true;
+    return order.status === filter;
+  });
+
+  if (!isAuthenticated) {
+    return (
+      <div className="orders-page">
+        <div className="auth-required">
+          <h2>Please log in to view your orders</h2>
+          <Link to="/login" className="btn btn-primary">Login</Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="orders-page">
-      <h1>My Orders</h1>
+      <div className="orders-header">
+        <h1>My Orders</h1>
+        <div className="order-filters">
+          <button 
+            className={filter === 'all' ? 'active' : ''}
+            onClick={() => setFilter('all')}
+          >
+            All Orders
+          </button>
+          <button 
+            className={filter === 'pending' ? 'active' : ''}
+            onClick={() => setFilter('pending')}
+          >
+            Pending
+          </button>
+          <button 
+            className={filter === 'preparing' ? 'active' : ''}
+            onClick={() => setFilter('preparing')}
+          >
+            Preparing
+          </button>
+          <button 
+            className={filter === 'out_for_delivery' ? 'active' : ''}
+            onClick={() => setFilter('out_for_delivery')}
+          >
+            On the Way
+          </button>
+          <button 
+            className={filter === 'delivered' ? 'active' : ''}
+            onClick={() => setFilter('delivered')}
+          >
+            Delivered
+          </button>
+        </div>
+      </div>
       
-      {orders.length === 0 ? (
+      {filteredOrders.length === 0 ? (
         <div className="no-orders">
-          <p>You haven't placed any orders yet.</p>
-          <Link to="/" className="btn">Browse Restaurants</Link>
+          <div className="no-orders-content">
+            <h3>No orders found</h3>
+            <p>
+              {filter === 'all' 
+                ? "You haven't placed any orders yet." 
+                : `No ${filter.replace('_', ' ')} orders found.`
+              }
+            </p>
+            <Link to="/" className="btn btn-primary">Browse Restaurants</Link>
+          </div>
         </div>
       ) : (
         <div className="orders-list">
-          {orders.map((order) => (
-            <div key={order._id} className="order-card">
+          {filteredOrders.map((order) => (
+            <div key={order._id || order.id} className="order-card">
               <div className="order-header">
                 <div className="order-restaurant">
                   <h3>{order.restaurant.name}</h3>
                   <p className="order-date">{formatDate(order.createdAt)}</p>
                 </div>
-                <div className="order-status">
-                  <span className={`status-badge ${getStatusBadgeClass(order.status)}`}>
-                    {order.status.replace('_', ' ').toUpperCase()}
-                  </span>
+                <div className="order-status-section">
+                  <div className="status-badge">
+                    {getStatusIcon(order.status)}
+                    <span className="status-text">
+                      {order.status.replace('_', ' ').toUpperCase()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Live Order Tracking Progress Bar */}
+              <div className="order-progress">
+                <div className="progress-bar">
+                  <div 
+                    className="progress-fill" 
+                    style={{ width: `${getStatusProgress(order.status)}%` }}
+                  ></div>
+                </div>
+                <div className="progress-steps">
+                  <div className={`step ${['pending', 'preparing', 'out_for_delivery', 'delivered'].includes(order.status) ? 'completed' : ''}`}>
+                    <FaClock />
+                    <span>Confirmed</span>
+                  </div>
+                  <div className={`step ${['preparing', 'out_for_delivery', 'delivered'].includes(order.status) ? 'completed' : ''}`}>
+                    <FaUtensils />
+                    <span>Preparing</span>
+                  </div>
+                  <div className={`step ${['out_for_delivery', 'delivered'].includes(order.status) ? 'completed' : ''}`}>
+                    <FaMotorcycle />
+                    <span>On the way</span>
+                  </div>
+                  <div className={`step ${order.status === 'delivered' ? 'completed' : ''}`}>
+                    <FaCheckCircle />
+                    <span>Delivered</span>
+                  </div>
                 </div>
               </div>
               
@@ -76,26 +167,65 @@ const Orders = () => {
                       <span className="item-quantity">{item.quantity}x</span>
                       <span className="item-name">{item.name}</span>
                     </div>
-                    <div className="item-price">${(item.price * item.quantity).toFixed(2)}</div>
+                    <div className="item-price">
+                      ₹{item.priceInRupees ? (item.priceInRupees * item.quantity).toFixed(0) : (item.price * item.quantity * 15).toFixed(0)}
+                    </div>
                   </div>
                 ))}
               </div>
               
-              <div className="order-footer">
-                <div className="order-total">
-                  <span>Total:</span>
-                  <span className="total-amount">${order.total.toFixed(2)}</span>
+              <div className="order-summary">
+                <div className="summary-row">
+                  <span>Subtotal:</span>
+                  <span>{order.totalAmount ? order.totalAmount.toFixed(0) : (order.items.reduce((sum, item) => sum + (item.priceInRupees * item.quantity), 0)).toFixed(0)}</span>
                 </div>
-                
-                <div className="order-actions">
-                  <Link to={`/orders/tracking/${order.id}`} className="btn btn-secondary">
-                    Track Order
-                  </Link>
-                  <Link to={`/restaurants/${order.restaurant._id}`} className="btn">
-                    Reorder
-                  </Link>
+                <div className="summary-row">
+                  <span>Delivery Fee:</span>
+                  <span>{order.deliveryFee || 20}</span>
+                </div>
+                <div className="summary-row">
+                  <span>Tax:</span>
+                  <span>{order.taxAmount ? order.taxAmount.toFixed(0) : '0'}</span>
+                </div>
+                <div className="summary-row total">
+                  <span>Total:</span>
+                  <span>{order.grandTotal ? order.grandTotal.toFixed(0) : order.total.toFixed(0)}</span>
                 </div>
               </div>
+              
+              <div className="order-actions">
+                <Link 
+                  to={`/orders/tracking/${order.id || order._id}`} 
+                  className="btn btn-secondary"
+                >
+                  <FaMapMarkerAlt /> Track Order
+                </Link>
+                <Link 
+                  to={`/restaurants/${order.restaurant._id}`} 
+                  className="btn btn-primary"
+                >
+                  Reorder
+                </Link>
+                {order.status === 'delivered' && (
+                  <button className="btn btn-outline">
+                    <FaStar /> Rate & Review
+                  </button>
+                )}
+              </div>
+
+              {/* Estimated Delivery Time */}
+              {order.status !== 'delivered' && (
+                <div className="delivery-estimate">
+                  <FaClock />
+                  <span>
+                    Estimated delivery: {
+                      order.status === 'pending' ? '40-50 min' :
+                      order.status === 'preparing' ? '25-35 min' :
+                      order.status === 'out_for_delivery' ? '10-15 min' : 'Soon'
+                    }
+                  </span>
+                </div>
+              )}
             </div>
           ))}
         </div>

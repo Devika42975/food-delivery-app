@@ -1,24 +1,29 @@
 // Currency utility functions
 
 /**
- * Convert price range symbols to rupee ranges
+ * Convert price range symbols to readable labels
  * @param {string} priceRange - Price range in dollar format (e.g., '$', '$$', '$$$')
- * @returns {string} Price range in rupee format (e.g., '₹', '₹₹', '₹₹₹')
+ * @returns {string} Price range as readable text (e.g., 'Affordable', 'Mid-range', 'Premium')
  */
 export const convertPriceRangeToRupees = (priceRange) => {
-  if (!priceRange) return '';
-  return priceRange.replace(/\$/g, '₹');
+  const conversion = {
+    '$': 'Affordable',
+    '$$': 'Mid-range',
+    '$$$': 'Premium',
+    '$$$$': 'Luxury'
+  };
+  return conversion[priceRange] || 'Mid-range';
 };
 
 /**
- * Format price in rupees
+ * Format price with rupee symbol for menu items
  * @param {number} price - Price in dollars
- * @returns {string} Formatted price in rupees
+ * @returns {string} Formatted price with rupee symbol
  */
 export const formatPriceInRupees = (price) => {
   if (typeof price !== 'number') return '₹0';
-  // Convert dollar price to rupees (approximate conversion rate)
-  const rupeePrice = price * 75;
+  // Convert dollar price to rupees with fair pricing
+  const rupeePrice = price * 15;
   return `₹${rupeePrice.toFixed(0)}`;
 };
 
@@ -29,7 +34,7 @@ export const formatPriceInRupees = (price) => {
  */
 export const convertToRupees = (dollarPrice) => {
   if (typeof dollarPrice !== 'number') return 0;
-  return dollarPrice * 75;
+  return dollarPrice * 15;
 };
 
 export default {

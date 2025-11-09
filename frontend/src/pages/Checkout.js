@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useOrder } from '../context/OrderContext';
+import { formatPriceInRupees } from '../utils/currencyUtils';
 import { toast } from 'react-toastify';
 import './Checkout.css';
 
@@ -71,8 +72,8 @@ const Checkout = () => {
   };
 
   // Convert dollar prices to rupees
-  const totalInRupees = total * 75;
-  const deliveryFee = 40; // Delivery fee in rupees
+  const totalInRupees = total * 15;
+  const deliveryFee = 20; // Delivery fee in rupees
   const taxInRupees = totalInRupees * 0.05; // 5% GST
   const grandTotal = totalInRupees + deliveryFee + taxInRupees;
 
@@ -100,7 +101,7 @@ const Checkout = () => {
                     <span className="item-quantity">{item.quantity}x</span>
                     <span className="item-name">{item.name}</span>
                   </div>
-                  <span className="item-price">₹{(item.price * item.quantity * 75).toFixed(0)}</span>
+                  <span className="item-price">{formatPriceInRupees(item.price * item.quantity)}</span>
                 </div>
               ))}
             </div>
@@ -108,19 +109,19 @@ const Checkout = () => {
             <div className="price-details">
               <div className="price-row">
                 <span>Subtotal</span>
-                <span>₹{totalInRupees.toFixed(0)}</span>
+                <span>{totalInRupees.toFixed(0)}</span>
               </div>
               <div className="price-row">
                 <span>Delivery Fee</span>
-                <span>₹{deliveryFee}</span>
+                <span>{deliveryFee}</span>
               </div>
               <div className="price-row">
                 <span>GST (5%)</span>
-                <span>₹{taxInRupees.toFixed(0)}</span>
+                <span>{taxInRupees.toFixed(0)}</span>
               </div>
               <div className="price-row total">
                 <span>Total</span>
-                <span>₹{grandTotal.toFixed(0)}</span>
+                <span>{grandTotal.toFixed(0)}</span>
               </div>
             </div>
           </div>
@@ -206,7 +207,7 @@ const Checkout = () => {
                 className="btn btn-block place-order-btn"
                 disabled={loading}
               >
-                {loading ? 'Processing...' : `Place Order - ₹${grandTotal.toFixed(0)}`}
+                {loading ? 'Processing...' : `Place Order - ${grandTotal.toFixed(0)}`}
               </button>
             </form>
           </div>

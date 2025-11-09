@@ -12,6 +12,7 @@ import Orders from './pages/Orders';
 import OrderTracking from './pages/OrderTracking';
 import ReviewItem from './pages/ReviewItem';
 import Profile from './pages/Profile';
+import Favorites from './pages/Favorites';
 import NotFound from './pages/NotFound';
 import PrivateRoute from './components/routing/PrivateRoute';
 import { useAuth } from './context/AuthContext';
@@ -46,6 +47,7 @@ function App() {
             <Route path="/restaurants/:id" element={<RestaurantDetails />} />
             <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
             <Route path="/orders" element={<PrivateRoute><Orders /></PrivateRoute>} />
+            <Route path="/favorites" element={<Favorites />} />
             <Route path="/orders/tracking/:orderId" element={<OrderTracking />} />
             <Route path="/review/:orderId/:itemId" element={<PrivateRoute><ReviewItem /></PrivateRoute>} />
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />

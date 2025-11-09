@@ -43,11 +43,11 @@ const RestaurantDetails = () => {
              id === 'rest8' ? ['Continental', 'Rooftop'] : 
              id === 'rest9' ? ['Brewery', 'Continental'] : 
              id === 'rest10' ? ['Bar', 'Multi-cuisine'] : ['International', 'Fusion'],
-    priceRange: id === 'rest1' ? '₹₹₹' : 
-               id === 'rest2' ? '₹' : 
-               id === 'rest3' ? '₹₹' : 
-               id === 'rest4' ? '₹₹₹' : 
-               id === 'rest5' ? '₹₹₹₹' : '₹₹',
+    priceRange: id === 'rest1' ? 'Premium' : 
+               id === 'rest2' ? 'Affordable' : 
+               id === 'rest3' ? 'Mid-range' : 
+               id === 'rest4' ? 'Premium' : 
+               id === 'rest5' ? 'Luxury' : 'Mid-range',
     rating: id === 'rest1' ? 4.6 : 
             id === 'rest2' ? 4.5 : 
             id === 'rest3' ? 4.4 : 
@@ -136,7 +136,16 @@ const RestaurantDetails = () => {
       saturday: { open: '11:00 AM', close: '11:00 PM' },
       sunday: { open: '12:00 PM', close: '9:00 PM' }
     },
-    website: 'https://example.com',
+    website: id === 'rest1' ? 'https://www.zomato.com/bangalore/tiamo' : 
+             id === 'rest2' ? 'https://www.zomato.com/bangalore/shri-sagar-ctr' : 
+             id === 'rest3' ? 'https://www.zomato.com/bangalore/kuuraku' : 
+             id === 'rest4' ? 'https://www.geistbrewing.com' : 
+             id === 'rest5' ? 'https://www.ritzcarlton.com/en/hotels/india/bangalore' : 
+             id === 'rest6' ? 'https://www.zomato.com/bangalore/bobs-bar' : 
+             id === 'rest7' ? 'https://www.zomato.com/bangalore/roxie' : 
+             id === 'rest8' ? 'https://www.13thfloor.in' : 
+             id === 'rest9' ? 'https://www.toit.in' : 
+             id === 'rest10' ? 'https://www.zomato.com/bangalore/hype' : 'https://www.zomato.com',
     reviews: [
       {
         _id: 'review1',
@@ -289,10 +298,22 @@ const RestaurantDetails = () => {
                 <span>{restaurant.phone || '(555) 123-4567'}</span>
               </div>
               
-              {restaurant.website && (
+              {restaurant.website && restaurant.website !== 'https://example.com' && (
                 <div className="info-item">
                   <FaGlobe />
-                  <a href={restaurant.website} target="_blank" rel="noopener noreferrer">
+                  <a 
+                    href={restaurant.website} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="website-link"
+                    onClick={(e) => {
+                      // Ensure the link works properly
+                      if (!restaurant.website.startsWith('http')) {
+                        e.preventDefault();
+                        window.open(`https://${restaurant.website}`, '_blank');
+                      }
+                    }}
+                  >
                     Visit Website
                   </a>
                 </div>

@@ -13,19 +13,34 @@ exports.getRestaurants = async (req, res) => {
         '1559526324-593bc073d938', '1517248135467-4c7edcad34c4', '1514933651103-005eec06c04b',
         '1555396273-367ea4eb4db5', '1600891964599-f61ba0e24092', '1559526324-4b87b5e36e44',
         '1470337458703-46ad1756a187', '1574711902264-e80630393a05', '1544148103-0773bf10d330',
-        '1579871494447-9811cf80d66c', '1572116469696-31de0f17cc34', '1540648639573-8c848de23f0a',
-        '1559314809-0d155014e29e', '1569718212165-3a8278d5f624', '1585937421612-70a008356cf4',
-        '1579684947550-22e945225d9a', '1571407970349-bc81e7e96d47', '1533777857889-4be7c70b33f7',
-        '1550966871-3ed3cdb5ed0c', '1498837167922-ddd27525d352', '1466978913421-dad2ebd01d17',
-        '1594212699903-ec8a3eca50f5', '1561501878-aabd62634533', '1543007630-9710e4a00a20',
-        '1563245372-f21724e3856d', '1562565652-a0d8f0c59eb4', '1534766555764-ce878a5e3a2b',
-        '1505253758473-96b7015fcd40', '1542367592-8849eb970322', '1615141982883-c7ad0e69fd62',
-        '1559339352-11d035aa65de', '1565299624946-b28f40a0ae38', '1552566626-52f8b828add9',
-        '1414235077428-338989a2e8c0', '1590846406792-0adc7f938f1d', '1551218808-94e220e084d2',
-        '1578474846511-04ba529f0b88', '1590577976322-3d2d6e2130d5', '1551632436-cbf8dd35adfa',
-        '1559329007-40df8a9345d8', '1578662996442-48f60103fc96', '1551632811-561732d1e306',
-        '1590846083693-f23fdede3a7e', '1566633806327-68e152aaf26d', '1567696911980-2c295b095e02',
-        '1601050690597-df0568f70950', '1553621042-f6e147245754', '1617196034183-421b4917c92d'
+        '1572116469696-31de0f17cc34', '1540648639573-8c848de23f0a', '1559314809-0d155014e29e',
+        '1569718212165-3a8278d5f624', '1585937421612-70a008356cf4', '1579684947550-22e945225d9a',
+        '1571407970349-bc81e7e96d47', '1533777857889-4be7c70b33f7', '1550966871-3ed3cdb5ed0c',
+        '1498837167922-ddd27525d352', '1466978913421-dad2ebd01d17', '1594212699903-ec8a3eca50f5',
+        '1561501878-aabd62634533', '1543007630-9710e4a00a20', '1563245372-f21724e3856d',
+        '1562565652-a0d8f0c59eb4', '1534766555764-ce878a5e3a2b', '1505253758473-96b7015fcd40',
+        '1542367592-8849eb970322', '1615141982883-c7ad0e69fd62', '1559339352-11d035aa65de',
+        '1565299624946-b28f40a0ae38', '1552566626-52f8b828add9', '1414235077428-338989a2e8c0',
+        '1590846406792-0adc7f938f1d', '1551218808-94e220e084d2', '1578474846511-04ba529f0b88',
+        '1590577976322-3d2d6e2130d5', '1551632436-cbf8dd35adfa', '1559329007-40df8a9345d8',
+        '1578662996442-48f60103fc96', '1551632811-561732d1e306', '1590846083693-f23fdede3a7e',
+        '1566633806327-68e152aaf26d', '1567696911980-2c295b095e02', '1601050690597-df0568f70950',
+        '1553621042-f6e147245754', '1617196034183-421b4917c92d', '1504674900471-c7ce16fbb0bb',
+        '1571091718767-18b5b1457add', '1627308595171-d1b5d67129c4', '1633383718081-22ac93e3db65',
+        '1496116218417-1a781b1c416c', '1562967914-608f82629710', '1580476262798-bddd9f4b7369',
+        '1609501676725-7186f0a1b4d3', '1579584425555-c3ce17fd4351', '1557872943-16a5ac26437e',
+        '1525755662778-989d0524087e', '1583952875272-a75134f5e369', '1598515214211-89d3c73ae83b',
+        '1590301157890-4810ed352733', '1621303837174-89787a7d4729', '1501443762994-82bd5dace89a',
+        '1511124076533-20395e192f7d', '1608039755401-742074f0548d', '1639024471283-03518883512d',
+        '1551782450-a2132b4ba21d', '1550547660-d9450f859349', '1564355808539-22fda35bed7e',
+        '1551024709-8f23befc6f87', '1600103442097-8b74394b95c6', '1633964913295-ceb43826e7c7',
+        '1519708227418-c8fd9a32b7a2', '1551024506-0bccd828d307', '1470124182917-cc6e71b22ecc',
+        '1464305795204-6f5bbfc7fb81', '1565557623262-b51c2513a641', '1594041680534-e8c8cdebd659',
+        '1631292784640-2b24be784d1c', '1573140401552-3fab0b24427f', '1512621776951-a57141f2eefd',
+        '1519915028121-7d3463d5b1ff', '1626804475297-41608ea09aeb', '1548943487-a2e4e43b4853',
+        '1582878826629-29b7ad1cdc43', '1547592166-23ac45744acd', '1529042410759-befb1204b468',
+        '1455619452474-d2be8b1e70cd', '1546241072-48010ad2862c', '1559847844-5315695dadae',
+        '1490474418585-ba9bad8fd0ea', '1455619452474-d2be8b1e70cd', '1546978913421-dad2ebd01d17'
       ];
       return `https://images.unsplash.com/photo-${imageIds[index % imageIds.length]}?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80`;
     };
@@ -480,6 +495,96 @@ exports.getRestaurants = async (req, res) => {
         rating: 4.3,
         numReviews: 95,
         images: [getUniqueImage(49)]
+      },
+      {
+        _id: 'rest51',
+        name: 'Spice Garden',
+        cuisine: ['Thai', 'Asian'],
+        priceRange: '$$',
+        rating: 4.4,
+        numReviews: 105,
+        images: [getUniqueImage(50)]
+      },
+      {
+        _id: 'rest52',
+        name: 'The Pasta House',
+        cuisine: ['Italian', 'European'],
+        priceRange: '$$',
+        rating: 4.2,
+        numReviews: 88,
+        images: [getUniqueImage(51)]
+      },
+      {
+        _id: 'rest53',
+        name: 'Ocean Breeze',
+        cuisine: ['Seafood', 'Mediterranean'],
+        priceRange: '$$$',
+        rating: 4.6,
+        numReviews: 125,
+        images: [getUniqueImage(52)]
+      },
+      {
+        _id: 'rest54',
+        name: 'Maharaja Palace',
+        cuisine: ['North Indian', 'Mughlai'],
+        priceRange: '$$',
+        rating: 4.5,
+        numReviews: 140,
+        images: [getUniqueImage(53)]
+      },
+      {
+        _id: 'rest55',
+        name: 'Sakura Sushi',
+        cuisine: ['Japanese', 'Sushi'],
+        priceRange: '$$$',
+        rating: 4.7,
+        numReviews: 115,
+        images: [getUniqueImage(54)]
+      },
+      {
+        _id: 'rest56',
+        name: 'The Craft House',
+        cuisine: ['Brewery', 'American'],
+        priceRange: '$$',
+        rating: 4.3,
+        numReviews: 98,
+        images: [getUniqueImage(55)]
+      },
+      {
+        _id: 'rest57',
+        name: 'Bella Vista',
+        cuisine: ['Italian', 'Fine Dining'],
+        priceRange: '$$$$',
+        rating: 4.8,
+        numReviews: 160,
+        images: [getUniqueImage(56)]
+      },
+      {
+        _id: 'rest58',
+        name: 'Dragon Palace',
+        cuisine: ['Chinese', 'Cantonese'],
+        priceRange: '$$',
+        rating: 4.4,
+        numReviews: 92,
+        images: [getUniqueImage(57)]
+      },
+      {
+        _id: 'rest59',
+        name: 'Coastal Kitchen',
+        cuisine: ['Seafood', 'Coastal'],
+        priceRange: '$$',
+        rating: 4.3,
+        numReviews: 87,
+        images: [getUniqueImage(58)]
+      },
+      {
+        _id: 'rest60',
+        name: 'The Rooftop Lounge',
+        cuisine: ['Continental', 'Bar'],
+        priceRange: '$$$',
+        rating: 4.5,
+        numReviews: 130,
+        images: [getUniqueImage(59)]
       }
     ];
 
@@ -517,9 +622,9 @@ exports.getRestaurants = async (req, res) => {
       );
     }
 
-    // Pagination
+    // Pagination - default to showing more restaurants
     const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 10;
+    const limit = parseInt(req.query.limit, 10) || 50;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const total = filteredRestaurants.length;
@@ -638,7 +743,17 @@ exports.getRestaurant = async (req, res) => {
             id === 'rest7' ? 'Roxie' : 
             id === 'rest8' ? 'The 13th Floor' : 
             id === 'rest9' ? 'Toit' : 
-            id === 'rest10' ? 'Hype' : 'Other Restaurant',
+            id === 'rest10' ? 'Hype' : 
+            id === 'rest51' ? 'Spice Garden' :
+            id === 'rest52' ? 'The Pasta House' :
+            id === 'rest53' ? 'Ocean Breeze' :
+            id === 'rest54' ? 'Maharaja Palace' :
+            id === 'rest55' ? 'Sakura Sushi' :
+            id === 'rest56' ? 'The Craft House' :
+            id === 'rest57' ? 'Bella Vista' :
+            id === 'rest58' ? 'Dragon Palace' :
+            id === 'rest59' ? 'Coastal Kitchen' :
+            id === 'rest60' ? 'The Rooftop Lounge' : 'Other Restaurant',
       cuisine: id === 'rest1' ? ['Italian', 'European'] : 
               id === 'rest2' ? ['South Indian', 'Vegetarian'] : 
               id === 'rest3' ? ['Japanese', 'Asian'] : 
@@ -648,12 +763,32 @@ exports.getRestaurant = async (req, res) => {
               id === 'rest7' ? ['Continental', 'Bar'] : 
               id === 'rest8' ? ['Continental', 'Rooftop'] : 
               id === 'rest9' ? ['Brewery', 'Continental'] : 
-              id === 'rest10' ? ['Bar', 'Multi-cuisine'] : ['International', 'Fusion'],
+              id === 'rest10' ? ['Bar', 'Multi-cuisine'] : 
+              id === 'rest51' ? ['Thai', 'Asian'] :
+              id === 'rest52' ? ['Italian', 'European'] :
+              id === 'rest53' ? ['Seafood', 'Mediterranean'] :
+              id === 'rest54' ? ['North Indian', 'Mughlai'] :
+              id === 'rest55' ? ['Japanese', 'Sushi'] :
+              id === 'rest56' ? ['Brewery', 'American'] :
+              id === 'rest57' ? ['Italian', 'Fine Dining'] :
+              id === 'rest58' ? ['Chinese', 'Cantonese'] :
+              id === 'rest59' ? ['Seafood', 'Coastal'] :
+              id === 'rest60' ? ['Continental', 'Bar'] : ['International', 'Fusion'],
       priceRange: id === 'rest1' ? '$$$' : 
                  id === 'rest2' ? '$' : 
                  id === 'rest3' ? '$$' : 
                  id === 'rest4' ? '$$$' : 
-                 id === 'rest5' ? '$$$$' : '$$',
+                 id === 'rest5' ? '$$$$' : 
+                 id === 'rest51' ? '$$' :
+                 id === 'rest52' ? '$$' :
+                 id === 'rest53' ? '$$$' :
+                 id === 'rest54' ? '$$' :
+                 id === 'rest55' ? '$$$' :
+                 id === 'rest56' ? '$$' :
+                 id === 'rest57' ? '$$$$' :
+                 id === 'rest58' ? '$$' :
+                 id === 'rest59' ? '$$' :
+                 id === 'rest60' ? '$$$' : '$$',
       rating: id === 'rest1' ? 4.6 : 
               id === 'rest2' ? 4.5 : 
               id === 'rest3' ? 4.4 : 
@@ -663,7 +798,17 @@ exports.getRestaurant = async (req, res) => {
               id === 'rest7' ? 4.1 : 
               id === 'rest8' ? 4.5 : 
               id === 'rest9' ? 4.4 : 
-              id === 'rest10' ? 4.0 : 4.3,
+              id === 'rest10' ? 4.0 : 
+              id === 'rest51' ? 4.4 :
+              id === 'rest52' ? 4.2 :
+              id === 'rest53' ? 4.6 :
+              id === 'rest54' ? 4.5 :
+              id === 'rest55' ? 4.7 :
+              id === 'rest56' ? 4.3 :
+              id === 'rest57' ? 4.8 :
+              id === 'rest58' ? 4.4 :
+              id === 'rest59' ? 4.3 :
+              id === 'rest60' ? 4.5 : 4.3,
       numReviews: id === 'rest1' ? 150 : 
                   id === 'rest2' ? 200 : 
                   id === 'rest3' ? 120 : 
@@ -673,7 +818,17 @@ exports.getRestaurant = async (req, res) => {
                   id === 'rest7' ? 95 : 
                   id === 'rest8' ? 140 : 
                   id === 'rest9' ? 190 : 
-                  id === 'rest10' ? 85 : 100,
+                  id === 'rest10' ? 85 : 
+                  id === 'rest51' ? 105 :
+                  id === 'rest52' ? 88 :
+                  id === 'rest53' ? 125 :
+                  id === 'rest54' ? 140 :
+                  id === 'rest55' ? 115 :
+                  id === 'rest56' ? 98 :
+                  id === 'rest57' ? 160 :
+                  id === 'rest58' ? 92 :
+                  id === 'rest59' ? 87 :
+                  id === 'rest60' ? 130 : 100,
       images: [id === 'rest1' ? 'https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' : 
               id === 'rest2' ? 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' : 
               id === 'rest3' ? 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' : 

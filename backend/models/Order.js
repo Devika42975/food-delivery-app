@@ -40,11 +40,15 @@ const orderSchema = new mongoose.Schema(
     },
     deliveryFee: {
       type: Number,
-      default: 0,
+      default: 20,
     },
-    tax: {
+    taxAmount: {
       type: Number,
       default: 0,
+    },
+    grandTotal: {
+      type: Number,
+      required: true,
     },
     tip: {
       type: Number,
