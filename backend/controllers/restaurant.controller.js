@@ -6,6 +6,30 @@ const Restaurant = require('../models/Restaurant');
 exports.getRestaurants = async (req, res) => {
   try {
     // Restaurant data for development
+    // Generate unique images for each restaurant
+    const getUniqueImage = (index) => {
+      const imageIds = [
+        '1513104890138-7c749659a591', '1589301760014-d929f3979dbc', '1579871494447-9811cf80d66c',
+        '1559526324-593bc073d938', '1517248135467-4c7edcad34c4', '1514933651103-005eec06c04b',
+        '1555396273-367ea4eb4db5', '1600891964599-f61ba0e24092', '1559526324-4b87b5e36e44',
+        '1470337458703-46ad1756a187', '1574711902264-e80630393a05', '1544148103-0773bf10d330',
+        '1579871494447-9811cf80d66c', '1572116469696-31de0f17cc34', '1540648639573-8c848de23f0a',
+        '1559314809-0d155014e29e', '1569718212165-3a8278d5f624', '1585937421612-70a008356cf4',
+        '1579684947550-22e945225d9a', '1571407970349-bc81e7e96d47', '1533777857889-4be7c70b33f7',
+        '1550966871-3ed3cdb5ed0c', '1498837167922-ddd27525d352', '1466978913421-dad2ebd01d17',
+        '1594212699903-ec8a3eca50f5', '1561501878-aabd62634533', '1543007630-9710e4a00a20',
+        '1563245372-f21724e3856d', '1562565652-a0d8f0c59eb4', '1534766555764-ce878a5e3a2b',
+        '1505253758473-96b7015fcd40', '1542367592-8849eb970322', '1615141982883-c7ad0e69fd62',
+        '1559339352-11d035aa65de', '1565299624946-b28f40a0ae38', '1552566626-52f8b828add9',
+        '1414235077428-338989a2e8c0', '1590846406792-0adc7f938f1d', '1551218808-94e220e084d2',
+        '1578474846511-04ba529f0b88', '1590577976322-3d2d6e2130d5', '1551632436-cbf8dd35adfa',
+        '1559329007-40df8a9345d8', '1578662996442-48f60103fc96', '1551632811-561732d1e306',
+        '1590846083693-f23fdede3a7e', '1566633806327-68e152aaf26d', '1567696911980-2c295b095e02',
+        '1601050690597-df0568f70950', '1553621042-f6e147245754', '1617196034183-421b4917c92d'
+      ];
+      return `https://images.unsplash.com/photo-${imageIds[index % imageIds.length]}?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80`;
+    };
+
     const mockRestaurants = [
       {
         _id: 'rest1',
@@ -14,7 +38,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.6,
         numReviews: 150,
-        images: ['https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(0)]
       },
       {
         _id: 'rest2',
@@ -23,7 +47,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$',
         rating: 4.5,
         numReviews: 200,
-        images: ['https://images.unsplash.com/photo-1589301760014-d929f3979dbc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(1)]
       },
       {
         _id: 'rest3',
@@ -32,7 +56,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.4,
         numReviews: 120,
-        images: ['https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(2)]
       },
       {
         _id: 'rest4',
@@ -41,7 +65,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.3,
         numReviews: 180,
-        images: ['https://images.unsplash.com/photo-1559526324-593bc073d938?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(3)]
       },
       {
         _id: 'rest5',
@@ -50,7 +74,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$$',
         rating: 4.8,
         numReviews: 160,
-        images: ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(4)]
       },
       {
         _id: 'rest6',
@@ -59,7 +83,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.2,
         numReviews: 110,
-        images: ['https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(5)]
       },
       {
         _id: 'rest7',
@@ -68,7 +92,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.1,
         numReviews: 95,
-        images: ['https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(6)]
       },
       {
         _id: 'rest8',
@@ -77,7 +101,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.5,
         numReviews: 140,
-        images: ['https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(7)]
       },
       {
         _id: 'rest9',
@@ -86,7 +110,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.4,
         numReviews: 190,
-        images: ['https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(8)]
       },
       {
         _id: 'rest10',
@@ -95,7 +119,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.0,
         numReviews: 85,
-        images: ['https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(9)]
       },
       {
         _id: 'rest11',
@@ -104,7 +128,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.3,
         numReviews: 130,
-        images: ['https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(10)]
       },
       {
         _id: 'rest12',
@@ -113,7 +137,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.5,
         numReviews: 170,
-        images: ['https://images.unsplash.com/photo-1559526324-593bc073d938?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(11)]
       },
       {
         _id: 'rest13',
@@ -122,7 +146,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.6,
         numReviews: 145,
-        images: ['https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(12)]
       },
       {
         _id: 'rest14',
@@ -131,7 +155,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.4,
         numReviews: 115,
-        images: ['https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(13)]
       },
       {
         _id: 'rest15',
@@ -140,7 +164,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.3,
         numReviews: 125,
-        images: ['https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(14)]
       },
       {
         _id: 'rest16',
@@ -149,7 +173,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.5,
         numReviews: 135,
-        images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(15)]
       },
       {
         _id: 'rest17',
@@ -158,7 +182,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.2,
         numReviews: 90,
-        images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(16)]
       },
       {
         _id: 'rest18',
@@ -167,7 +191,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.4,
         numReviews: 140,
-        images: ['https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(17)]
       },
       {
         _id: 'rest19',
@@ -176,7 +200,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.3,
         numReviews: 110,
-        images: ['https://images.unsplash.com/photo-1589301760014-d929f3979dbc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(18)]
       },
       {
         _id: 'rest20',
@@ -185,7 +209,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.7,
         numReviews: 160,
-        images: ['https://images.unsplash.com/photo-1579684947550-22e945225d9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(19)]
       },
       {
         _id: 'rest21',
@@ -194,7 +218,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.5,
         numReviews: 130,
-        images: ['https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(20)]
       },
       {
         _id: 'rest22',
@@ -203,7 +227,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.4,
         numReviews: 120,
-        images: ['https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(21)]
       },
       {
         _id: 'rest23',
@@ -212,7 +236,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.2,
         numReviews: 95,
-        images: ['https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(22)]
       },
       {
         _id: 'rest24',
@@ -221,7 +245,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.3,
         numReviews: 140,
-        images: ['https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(23)]
       },
       {
         _id: 'rest25',
@@ -230,7 +254,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$$',
         rating: 4.6,
         numReviews: 110,
-        images: ['https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(24)]
       },
       {
         _id: 'rest26',
@@ -239,7 +263,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.3,
         numReviews: 100,
-        images: ['https://images.unsplash.com/photo-1559314809-0d155014e29e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(25)]
       },
       {
         _id: 'rest27',
@@ -248,7 +272,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.1,
         numReviews: 85,
-        images: ['https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(26)]
       },
       {
         _id: 'rest28',
@@ -257,7 +281,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.5,
         numReviews: 120,
-        images: ['https://images.unsplash.com/photo-1559314809-0d155014e29e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(27)]
       },
       {
         _id: 'rest29',
@@ -266,7 +290,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.2,
         numReviews: 90,
-        images: ['https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(28)]
       },
       {
         _id: 'rest30',
@@ -275,7 +299,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.4,
         numReviews: 105,
-        images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(29)]
       },
       {
         _id: 'rest31',
@@ -284,7 +308,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.5,
         numReviews: 95,
-        images: ['https://images.unsplash.com/photo-1585937421612-70a008356cf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(30)]
       },
       {
         _id: 'rest32',
@@ -293,7 +317,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.3,
         numReviews: 85,
-        images: ['https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(31)]
       },
       {
         _id: 'rest33',
@@ -302,7 +326,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.4,
         numReviews: 110,
-        images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(32)]
       },
       {
         _id: 'rest34',
@@ -311,7 +335,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.5,
         numReviews: 100,
-        images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(33)]
       },
       {
         _id: 'rest35',
@@ -320,7 +344,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$$',
         rating: 4.7,
         numReviews: 120,
-        images: ['https://images.unsplash.com/photo-1540648639573-8c848de23f0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(34)]
       },
       {
         _id: 'rest36',
@@ -329,7 +353,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.4,
         numReviews: 95,
-        images: ['https://images.unsplash.com/photo-1579684947550-22e945225d9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(35)]
       },
       {
         _id: 'rest37',
@@ -338,7 +362,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.3,
         numReviews: 85,
-        images: ['https://images.unsplash.com/photo-1579684947550-22e945225d9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(36)]
       },
       {
         _id: 'rest38',
@@ -347,7 +371,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.6,
         numReviews: 110,
-        images: ['https://images.unsplash.com/photo-1585937421612-70a008356cf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(37)]
       },
       {
         _id: 'rest39',
@@ -356,7 +380,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$$',
         rating: 4.7,
         numReviews: 130,
-        images: ['https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(38)]
       },
       {
         _id: 'rest40',
@@ -365,7 +389,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$$',
         rating: 4.8,
         numReviews: 140,
-        images: ['https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(39)]
       },
       {
         _id: 'rest41',
@@ -374,7 +398,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.5,
         numReviews: 115,
-        images: ['https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(40)]
       },
       {
         _id: 'rest42',
@@ -383,7 +407,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.2,
         numReviews: 95,
-        images: ['https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(41)]
       },
       {
         _id: 'rest43',
@@ -392,7 +416,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.4,
         numReviews: 105,
-        images: ['https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(42)]
       },
       {
         _id: 'rest44',
@@ -401,7 +425,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.3,
         numReviews: 120,
-        images: ['https://images.unsplash.com/photo-1585937421612-70a008356cf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(43)]
       },
       {
         _id: 'rest45',
@@ -410,7 +434,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.2,
         numReviews: 110,
-        images: ['https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(44)]
       },
       {
         _id: 'rest46',
@@ -419,7 +443,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.1,
         numReviews: 85,
-        images: ['https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(45)]
       },
       {
         _id: 'rest47',
@@ -428,7 +452,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.3,
         numReviews: 100,
-        images: ['https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(46)]
       },
       {
         _id: 'rest48',
@@ -437,7 +461,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$',
         rating: 4.5,
         numReviews: 150,
-        images: ['https://images.unsplash.com/photo-1589301760014-d929f3979dbc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(47)]
       },
       {
         _id: 'rest49',
@@ -446,7 +470,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.4,
         numReviews: 110,
-        images: ['https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(48)]
       },
       {
         _id: 'rest50',
@@ -455,7 +479,7 @@ exports.getRestaurants = async (req, res) => {
         priceRange: '$$$',
         rating: 4.3,
         numReviews: 95,
-        images: ['https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80']
+        images: [getUniqueImage(49)]
       }
     ];
 
