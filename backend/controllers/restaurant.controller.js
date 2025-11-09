@@ -729,46 +729,7 @@ exports.getRestaurant = async (req, res) => {
           createdAt: new Date(Date.now() - 86400000).toISOString()
         }
       ],
-      menus: [{
-        _id: 'menu1',
-        name: 'Main Menu',
-        categories: ['Appetizers', 'Main Course', 'Desserts', 'Beverages'],
-        items: [
-          {
-            _id: 'item1',
-            name: 'Margherita Pizza',
-            description: 'Classic pizza with tomato sauce, mozzarella, and basil',
-            price: 12.99,
-            category: 'Main Course',
-            image: 'https://via.placeholder.com/150',
-            isVegetarian: true,
-          },
-          {
-            _id: 'item2',
-            name: 'Caesar Salad',
-            description: 'Fresh romaine lettuce with Caesar dressing, croutons, and parmesan',
-            price: 8.99,
-            category: 'Appetizers',
-            image: 'https://via.placeholder.com/150',
-          },
-          {
-            _id: 'item3',
-            name: 'Chocolate Cake',
-            description: 'Rich chocolate cake with a molten center',
-            price: 6.99,
-            category: 'Desserts',
-            image: 'https://via.placeholder.com/150',
-          },
-          {
-            _id: 'item4',
-            name: 'Iced Tea',
-            description: 'Refreshing iced tea with lemon',
-            price: 2.99,
-            category: 'Beverages',
-            image: 'https://via.placeholder.com/150',
-          },
-        ],
-      }]
+      menus: [] // Menu data will be loaded from frontend utils
     };
 
     // Return the mock restaurant data
