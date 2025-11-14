@@ -11,6 +11,7 @@ import Checkout from './pages/Checkout';
 import Orders from './pages/Orders';
 import OrderTracking from './pages/OrderTracking';
 import ReviewItem from './pages/ReviewItem';
+import Review from './pages/Review';
 import Profile from './pages/Profile';
 import Favorites from './pages/Favorites';
 import NotFound from './pages/NotFound';
@@ -50,6 +51,7 @@ function App() {
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/orders/tracking/:orderId" element={<OrderTracking />} />
             <Route path="/review/:orderId/:itemId" element={<PrivateRoute><ReviewItem /></PrivateRoute>} />
+            <Route path="/review/:orderId/:restaurantId" element={<PrivateRoute><Review /></PrivateRoute>} />
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>

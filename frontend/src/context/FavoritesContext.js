@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const FavoritesContext = createContext();
 
@@ -41,9 +42,11 @@ export const FavoritesProvider = ({ children }) => {
       
       if (isCurrentlyFavorite) {
         // Remove from favorites
+        toast.info(`${restaurant.name} removed from favorites`);
         return prev.filter(fav => fav._id !== restaurant._id);
       } else {
         // Add to favorites
+        toast.success(`${restaurant.name} added to favorites!`);
         return [...prev, {
           _id: restaurant._id,
           name: restaurant.name,

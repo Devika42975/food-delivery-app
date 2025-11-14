@@ -52,7 +52,13 @@ const Checkout = () => {
         cart.items,
         cart.restaurant,
         grandTotal,
-        formData
+        {
+          name: formData.name,
+          phone: formData.phone,
+          address: formData.address,
+          notes: formData.notes,
+          paymentMethod: formData.paymentMethod
+        }
       );
       
       // Clear cart after successful order

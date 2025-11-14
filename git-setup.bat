@@ -8,14 +8,11 @@ REM Add all files
 git add .
 
 REM Commit changes
-git commit -m "Enhanced QuickBite app: Fixed images, added more food items, working wishlist, and functional website links"
+git commit -m "Initial commit: QuickBite Food Delivery Application - Complete MERN Stack Project"
 
-REM Add remote origin (replace YOUR_USERNAME with your GitHub username)
-echo.
-echo Please replace YOUR_USERNAME in the next command with your actual GitHub username
-echo Example: git remote add origin https://github.com/yourusername/quickbite-food-delivery.git
-echo.
-pause
+REM Add remote origin - REPLACE 'YOUR_GITHUB_USERNAME' with your actual username
+set /p username="Enter your GitHub username: "
+git remote add origin https://github.com/%username%/quickbite-food-delivery.git
 
 REM Push to GitHub
 git branch -M main
@@ -23,4 +20,5 @@ git push -u origin main
 
 echo.
 echo Repository pushed to GitHub successfully!
+echo Your project is now available at: https://github.com/%username%/quickbite-food-delivery
 pause

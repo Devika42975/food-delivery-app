@@ -144,52 +144,67 @@ const Orders = () => {
                   <div className={`step ${['pending', 'preparing', 'out_for_delivery', 'delivered'].includes(order.status) ? 'completed' : ''}`}>
                     <FaClock />
                     <span>Confirmed</span>
+                    {order.statusUpdates && order.statusUpdates.find(s => s.status === 'pending') && (
+                      <small>{new Date(order.statusUpdates.find(s => s.status === 'pending').timestamp).toLocaleTimeString()}</small>
+                    )}
                   </div>
                   <div className={`step ${['preparing', 'out_for_delivery', 'delivered'].includes(order.status) ? 'completed' : ''}`}>
                     <FaUtensils />
                     <span>Preparing</span>
+                    {order.statusUpdates && order.statusUpdates.find(s => s.status === 'preparing') && (
+                      <small>{new Date(order.statusUpdates.find(s => s.status === 'preparing').timestamp).toLocaleTimeString()}</small>
+                    )}
                   </div>
                   <div className={`step ${['out_for_delivery', 'delivered'].includes(order.status) ? 'completed' : ''}`}>
                     <FaMotorcycle />
                     <span>On the way</span>
+                    {order.statusUpdates && order.statusUpdates.find(s => s.status === 'out_for_delivery') && (
+                      <small>{new Date(order.statusUpdates.find(s => s.status === 'out_for_delivery').timestamp).toLocaleTimeString()}</small>
+                    )}
                   </div>
                   <div className={`step ${order.status === 'delivered' ? 'completed' : ''}`}>
                     <FaCheckCircle />
                     <span>Delivered</span>
+                    {order.statusUpdates && order.statusUpdates.find(s => s.status === 'delivered') && (
+                      <small>{new Date(order.statusUpdates.find(s => s.status === 'delivered').timestamp).toLocaleTimeString()}</small>
+                    )}
                   </div>
                 </div>
               </div>
               
               <div className="order-items">
-                {order.items.map((item, index) => (
-                  <div key={index} className="order-item">
-                    <div className="item-info">
-                      <span className="item-quantity">{item.quantity}x</span>
-                      <span className="item-name">{item.name}</span>
+                {order.items.map((item, index) => {
+                  const itemPrice = item.priceInRupees || (item.price * 15);
+                  return (
+                    <div key={index} className="order-item">
+                      <div className="item-info">
+                        <span className="item-quantity">{item.quantity}x</span>
+                        <span className="item-name">{item.name}</span>
+                      </div>
+                      <div className="item-price">
+                        {(itemPrice * item.quantity).toFixed(0)}
+                      </div>
                     </div>
-                    <div className="item-price">
-                      ₹{item.priceInRupees ? (item.priceInRupees * item.quantity).toFixed(0) : (item.price * item.quantity * 15).toFixed(0)}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               
               <div className="order-summary">
                 <div className="summary-row">
                   <span>Subtotal:</span>
-                  <span>{order.totalAmount ? order.totalAmount.toFixed(0) : (order.items.reduce((sum, item) => sum + (item.priceInRupees * item.quantity), 0)).toFixed(0)}</span>
+                  <span>{(order.subtotal || order.items.reduce((sum, item) => sum + ((item.priceInRupees || item.price * 15) * item.quantity), 0)).toFixed(0)}</span>
                 </div>
                 <div className="summary-row">
                   <span>Delivery Fee:</span>
                   <span>{order.deliveryFee || 20}</span>
                 </div>
                 <div className="summary-row">
-                  <span>Tax:</span>
-                  <span>{order.taxAmount ? order.taxAmount.toFixed(0) : '0'}</span>
+                  <span>GST (5%):</span>
+                  <span>{(order.tax || (order.subtotal || order.items.reduce((sum, item) => sum + ((item.priceInRupees || item.price * 15) * item.quantity), 0)) * 0.05).toFixed(0)}</span>
                 </div>
                 <div className="summary-row total">
                   <span>Total:</span>
-                  <span>{order.grandTotal ? order.grandTotal.toFixed(0) : order.total.toFixed(0)}</span>
+                  <span>{order.total ? order.total.toFixed(0) : ((order.subtotal || order.items.reduce((sum, item) => sum + ((item.priceInRupees || item.price * 15) * item.quantity), 0)) + (order.deliveryFee || 20) + ((order.subtotal || order.items.reduce((sum, item) => sum + ((item.priceInRupees || item.price * 15) * item.quantity), 0)) * 0.05)).toFixed(0)}</span>
                 </div>
               </div>
               
@@ -207,21 +222,44 @@ const Orders = () => {
                   Reorder
                 </Link>
                 {order.status === 'delivered' && (
-                  <button className="btn btn-outline">
+                  <Link 
+                    to={`/review/${order.id || order._id}/${order.restaurant._id}`} 
+                    className="btn btn-outline"
+                  >
                     <FaStar /> Rate & Review
-                  </button>
+                  </Link>
                 )}
               </div>
 
+              {/* Order Details */}
+              <div className="order-details">
+                <div className="detail-row">
+                  <span>Order ID:</span>
+                  <span>{order.id || order._id}</span>
+                </div>
+                <div className="detail-row">
+                  <span>Payment Method:</span>
+                  <span>{order.paymentMethod || 'Cash on Delivery'}</span>
+                </div>
+                {order.deliveryAddress && (
+                  <div className="detail-row">
+                    <span>Delivery Address:</span>
+                    <span>{typeof order.deliveryAddress === 'object' ? order.deliveryAddress.address : order.deliveryAddress}</span>
+                  </div>
+                )}
+              </div>
+              
               {/* Estimated Delivery Time */}
               {order.status !== 'delivered' && (
                 <div className="delivery-estimate">
                   <FaClock />
                   <span>
                     Estimated delivery: {
-                      order.status === 'pending' ? '40-50 min' :
-                      order.status === 'preparing' ? '25-35 min' :
-                      order.status === 'out_for_delivery' ? '10-15 min' : 'Soon'
+                      order.estimatedDelivery ? 
+                        new Date(order.estimatedDelivery).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) :
+                        order.status === 'pending' ? '40-50 min' :
+                        order.status === 'preparing' ? '25-35 min' :
+                        order.status === 'out_for_delivery' ? '10-15 min' : 'Soon'
                     }
                   </span>
                 </div>

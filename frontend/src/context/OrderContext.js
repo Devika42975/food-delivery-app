@@ -14,16 +14,17 @@ export const OrderProvider = ({ children }) => {
     localStorage.setItem('orders', JSON.stringify(orders));
   }, [orders]);
 
-  const placeOrder = (cartItems, restaurant, totalInRupees, deliveryAddress) => {
+  const placeOrder = (cartItems, restaurant, totalInRupees, deliveryInfo) => {
     // Calculate correct totals
     const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity * 15), 0);
     const deliveryFee = 20;
     const tax = subtotal * 0.05;
     const finalTotal = subtotal + deliveryFee + tax;
     
+    const orderId = 'order_' + Date.now();
     const newOrder = {
-      _id: 'order_' + Date.now(),
-      id: 'order_' + Date.now(),
+      _id: orderId,
+      id: orderId,
       items: cartItems.map(item => ({
         ...item,
         priceInRupees: item.price * 15
@@ -35,7 +36,8 @@ export const OrderProvider = ({ children }) => {
       tax,
       status: 'pending',
       createdAt: new Date().toISOString(),
-      deliveryAddress,
+      deliveryAddress: deliveryInfo,
+      paymentMethod: deliveryInfo?.paymentMethod || 'cash',
       estimatedDelivery: new Date(Date.now() + 45 * 60000).toISOString(),
       statusUpdates: [
         {
@@ -46,18 +48,18 @@ export const OrderProvider = ({ children }) => {
       ]
     };
     
-    // Simulate realistic order progression
+    // Simulate realistic order progression with shorter times for demo
     setTimeout(() => {
       updateOrderStatus(newOrder.id, 'preparing', 'Restaurant is preparing your order');
-    }, 2 * 60 * 1000); // 2 minutes
+    }, 30 * 1000); // 30 seconds
     
     setTimeout(() => {
       updateOrderStatus(newOrder.id, 'out_for_delivery', 'Your order is out for delivery');
-    }, 5 * 60 * 1000); // 5 minutes
+    }, 2 * 60 * 1000); // 2 minutes
     
     setTimeout(() => {
       updateOrderStatus(newOrder.id, 'delivered', 'Order delivered successfully');
-    }, 15 * 60 * 1000); // 15 minutes
+    }, 5 * 60 * 1000); // 5 minutes
 
     setOrders(prevOrders => [newOrder, ...prevOrders]);
     return newOrder.id;

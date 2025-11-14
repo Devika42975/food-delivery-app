@@ -356,7 +356,7 @@ const RestaurantDetails = () => {
                   <div className="menu-item-content">
                     <div className="menu-item-header">
                       <h3>{item.name}</h3>
-                      <span className="menu-item-price">₹{(item.price * 75).toFixed(0)}</span>
+                      <span className="menu-item-price">{(item.price * 75).toFixed(0)}</span>
                     </div>
                     
                     <p className="menu-item-description">{item.description}</p>

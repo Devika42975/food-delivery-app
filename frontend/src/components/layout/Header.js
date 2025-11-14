@@ -49,21 +49,32 @@ const Header = () => {
                 </li>
                 <li className="dropdown">
                   <button className="dropdown-btn">
-                    <FaUser /> {user.name}
+                    <FaUser /> {user?.name || 'User'}
                   </button>
                   <div className="dropdown-content">
-                    <Link to="/profile" onClick={() => setIsMenuOpen(false)}>Profile</Link>
-                    <button onClick={handleLogout}>Logout</button>
+                    <Link to="/profile" onClick={() => setIsMenuOpen(false)}>
+                      <FaUser /> Profile
+                    </Link>
+                    <Link to="/orders" onClick={() => setIsMenuOpen(false)}>
+                      📋 My Orders
+                    </Link>
+                    <Link to="/favorites" onClick={() => setIsMenuOpen(false)}>
+                      <FaHeart /> Favorites
+                    </Link>
+                    <div className="dropdown-divider"></div>
+                    <button onClick={handleLogout}>
+                      🚪 Logout
+                    </button>
                   </div>
                 </li>
               </>
             ) : (
               <>
                 <li>
-                  <Link to="/login" onClick={() => setIsMenuOpen(false)}>Login</Link>
+                  <Link to="/register" className="auth-link signup-btn" onClick={() => setIsMenuOpen(false)}>Sign Up</Link>
                 </li>
                 <li>
-                  <Link to="/register" onClick={() => setIsMenuOpen(false)}>Register</Link>
+                  <Link to="/login" className="auth-link login-btn" onClick={() => setIsMenuOpen(false)}>Log In</Link>
                 </li>
               </>
             )}

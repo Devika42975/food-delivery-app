@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
   // Load user if token exists (using mock data instead of API call)
   useEffect(() => {
     const loadUser = async () => {
-      if (token) {
+      if (token && token !== 'null' && token !== 'undefined') {
         // Use mock user data instead of API call
         setUser({
           _id: 'user123',
@@ -30,6 +30,11 @@ export const AuthProvider = ({ children }) => {
           email: 'user@example.com',
           role: 'user'
         });
+      } else {
+        // Clear invalid token
+        localStorage.removeItem('token');
+        setToken(null);
+        setUser(null);
       }
       setLoading(false);
     };
@@ -91,6 +96,15 @@ export const AuthProvider = ({ children }) => {
   // Logout user
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setToken(null);
+    setUser(null);
+  };
+
+  // Clear any invalid authentication state on app start
+  const clearAuthState = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setToken(null);
     setUser(null);
   };
@@ -122,6 +136,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         updateProfile,
+        clearAuthState,
         isAuthenticated: !!user,
       }}
     >

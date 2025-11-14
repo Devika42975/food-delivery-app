@@ -12,13 +12,29 @@ const OrderTracking = () => {
   const [loading, setLoading] = useState(true);
   const [currentStatus, setCurrentStatus] = useState(0);
   
-  // Mock order statuses
-  const orderStatuses = [
-    { id: 0, name: 'Order Received', icon: <FaCheckCircle />, time: '5 minutes ago' },
-    { id: 1, name: 'Preparing Food', icon: <FaUtensils />, time: 'In progress' },
-    { id: 2, name: 'Out for Delivery', icon: <FaMotorcycle />, time: 'Coming soon' },
-    { id: 3, name: 'Delivered', icon: <FaCheckCircle />, time: 'Estimated in 25 minutes' }
-  ];
+  // Dynamic order statuses based on actual order data
+  const getOrderStatuses = (order) => {
+    const statuses = [
+      { id: 0, name: 'Order Received', icon: <FaCheckCircle />, status: 'pending' },
+      { id: 1, name: 'Preparing Food', icon: <FaUtensils />, status: 'preparing' },
+      { id: 2, name: 'Out for Delivery', icon: <FaMotorcycle />, status: 'out_for_delivery' },
+      { id: 3, name: 'Delivered', icon: <FaCheckCircle />, status: 'delivered' }
+    ];
+    
+    return statuses.map(status => {
+      const statusUpdate = order?.statusUpdates?.find(s => s.status === status.status);
+      return {
+        ...status,
+        time: statusUpdate ? 
+          new Date(statusUpdate.timestamp).toLocaleString() : 
+          status.status === 'pending' ? 'Order placed' :
+          status.status === 'preparing' ? 'Waiting...' :
+          status.status === 'out_for_delivery' ? 'Pending...' :
+          'Pending...',
+        message: statusUpdate?.message || ''
+      };
+    });
+  };
 
   useEffect(() => {
     // Get order from context
@@ -100,7 +116,7 @@ const OrderTracking = () => {
             <h2>Order Status</h2>
             
             <div className="status-timeline">
-              {orderStatuses.map((status, index) => (
+              {getOrderStatuses(order).map((status, index) => (
                 <div 
                   key={status.id} 
                   className={`status-step ${index <= currentStatus ? 'active' : ''}`}
@@ -109,8 +125,9 @@ const OrderTracking = () => {
                   <div className="status-info">
                     <div className="status-name">{status.name}</div>
                     <div className="status-time">{status.time}</div>
+                    {status.message && <div className="status-message">{status.message}</div>}
                   </div>
-                  {index < orderStatuses.length - 1 && (
+                  {index < getOrderStatuses(order).length - 1 && (
                     <div className={`status-line ${index < currentStatus ? 'active' : ''}`}></div>
                   )}
                 </div>
@@ -119,7 +136,20 @@ const OrderTracking = () => {
             
             <div className="estimated-delivery">
               <h3>Estimated Delivery Time</h3>
-              <div className="delivery-time">25-35 minutes</div>
+              <div className="delivery-time">
+                {order.estimatedDelivery ? 
+                  new Date(order.estimatedDelivery).toLocaleString() :
+                  order.status === 'delivered' ? 'Delivered' :
+                  order.status === 'out_for_delivery' ? '10-15 minutes' :
+                  order.status === 'preparing' ? '25-35 minutes' :
+                  '40-50 minutes'
+                }
+              </div>
+              {order.status !== 'delivered' && (
+                <div className="delivery-note">
+                  <small>Delivery times may vary based on traffic and weather conditions</small>
+                </div>
+              )}
             </div>
           </div>
           
@@ -152,41 +182,65 @@ const OrderTracking = () => {
             <div className="price-details">
               <div className="price-row">
                 <span>Subtotal</span>
-                <span>₹{subtotalInRupees.toFixed(0)}</span>
+                <span>{(order.subtotal || subtotalInRupees).toFixed(0)}</span>
               </div>
               <div className="price-row">
                 <span>Delivery Fee</span>
-                <span>₹{deliveryFee}</span>
+                <span>{order.deliveryFee || deliveryFee}</span>
               </div>
               <div className="price-row">
                 <span>GST (5%)</span>
-                <span>₹{taxInRupees.toFixed(0)}</span>
+                <span>{(order.tax || taxInRupees).toFixed(0)}</span>
               </div>
               <div className="price-row total">
                 <span>Total</span>
-                <span>₹{totalInRupees.toFixed(0)}</span>
+                <span>{(order.total || totalInRupees).toFixed(0)}</span>
               </div>
             </div>
             
             <div className="delivery-address">
               <h3>Delivery Address</h3>
-              <p>{order.deliveryAddress?.name}</p>
-              <p>{order.deliveryAddress?.address}</p>
-              <p>Phone: {order.deliveryAddress?.phone}</p>
+              {order.deliveryAddress ? (
+                typeof order.deliveryAddress === 'object' ? (
+                  <>
+                    <p>{order.deliveryAddress.name}</p>
+                    <p>{order.deliveryAddress.address}</p>
+                    <p>Phone: {order.deliveryAddress.phone}</p>
+                  </>
+                ) : (
+                  <p>{order.deliveryAddress}</p>
+                )
+              ) : (
+                <p>Address not available</p>
+              )}
+            </div>
+            
+            <div className="order-info">
+              <h3>Order Information</h3>
+              <div className="info-row">
+                <span>Order ID:</span>
+                <span>{order._id}</span>
+              </div>
+              <div className="info-row">
+                <span>Order Date:</span>
+                <span>{new Date(order.createdAt).toLocaleString()}</span>
+              </div>
+              <div className="info-row">
+                <span>Payment Method:</span>
+                <span>{order.paymentMethod || 'Cash on Delivery'}</span>
+              </div>
             </div>
             
             <div className="order-actions">
               <Link to="/orders" className="btn btn-secondary">View All Orders</Link>
-              {currentStatus === 3 && order.items.map(item => (
+              {currentStatus === 3 && (
                 <Link 
-                  key={item._id} 
-                  to={`/review/${orderId}/${item._id}`} 
+                  to={`/review/${orderId}/${order.restaurant._id}`} 
                   className="btn btn-primary"
-                  style={{ marginRight: '10px', marginBottom: '10px' }}
                 >
-                  Review {item.name}
+                  Rate & Review Restaurant
                 </Link>
-              ))}
+              )}
             </div>
           </div>
         </div>
