@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Login user (mock implementation)
-  const login = async (email, password) => {
+  const login = async (email) => {
     try {
       // Mock successful login
       // In a real app, you would validate credentials

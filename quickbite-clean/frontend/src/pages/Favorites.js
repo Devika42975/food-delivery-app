@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaStar, FaHeart, FaMapMarkerAlt, FaClock, FaTrash } from 'react-icons/fa';
+import { FaStar, FaHeart, FaTrash } from 'react-icons/fa';
 import { useFavorites } from '../context/FavoritesContext';
 import RestaurantImage from '../components/RestaurantImage';
 import './Favorites.css';

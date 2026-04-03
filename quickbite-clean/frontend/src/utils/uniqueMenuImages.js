@@ -1,5 +1,5 @@
 // Comprehensive unique image system for menu items
-export const getUniqueMenuItemImage = (restaurantId, itemId, category) => {
+export const getUniqueMenuItemImage = (restaurantId, itemId) => {
   // Create a unique hash from restaurant ID and item ID
   const combinedId = `${restaurantId}-${itemId}`;
   let hash = 0;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useOrder } from '../context/OrderContext';
 import { formatPriceInRupees } from '../utils/currencyUtils';
-import { FaCheckCircle, FaHourglass, FaMotorcycle, FaUtensils } from 'react-icons/fa';
+import { FaCheckCircle, FaMotorcycle, FaUtensils } from 'react-icons/fa';
 import './OrderTracking.css';
 
 const OrderTracking = () => {
@@ -95,7 +95,6 @@ const OrderTracking = () => {
   }
 
   // Get order total from order data
-  const total = order.total || 0;
   const subtotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   // Convert dollar prices to rupees
   const subtotalInRupees = subtotal * 15;

@@ -17,7 +17,6 @@ const RestaurantDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('');
-  const [reviews, setReviews] = useState([]);
   const { addToCart, cart } = useCart();
 
   // Mock restaurant data for when API fails

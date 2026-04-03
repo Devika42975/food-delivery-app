@@ -23,7 +23,7 @@ const Home = () => {
   const { isFavorite, toggleFavorite } = useFavorites();
 
   // Enhanced location mapping for restaurants
-  const getLocationForRestaurant = (restaurantId, name) => {
+  const getLocationForRestaurant = (restaurantId) => {
     const locations = [
       'Koramangala', 'Indiranagar', 'Whitefield', 'Malleshwaram', 'UB City', 'OMR',
       'HSR Layout', 'BTM Layout', 'Jayanagar', 'Rajajinagar', 'Marathahalli',
@@ -34,7 +34,7 @@ const Home = () => {
   };
 
   // Enhanced delivery time calculation
-  const getDeliveryTime = (priceRange, location) => {
+  const getDeliveryTime = (priceRange) => {
     const baseTimes = {
       '$': ['15-25 min', '20-30 min'],
       '$$': ['20-30 min', '25-35 min'],
