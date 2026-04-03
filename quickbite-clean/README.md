@@ -158,8 +158,11 @@ quickbite-food-delivery/
 ## 🚀 Deployment
 
 ### Frontend (Netlify/Vercel)
-1. Build the project: `npm run build`
-2. Deploy the `build` folder
+1. Set project root to `frontend`
+2. Set environment variable `REACT_APP_API_URL` to your backend API base URL (example: `https://your-backend-domain.com/api`)
+3. Build command: `npm run build`
+4. Output directory: `build`
+5. Keep `frontend/vercel.json` so client-side routes (like `/login`, `/profile`) rewrite to `index.html`
 
 ### Backend (Heroku/Railway)
 1. Set environment variables

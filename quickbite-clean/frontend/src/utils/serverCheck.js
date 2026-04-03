@@ -1,9 +1,12 @@
 import { toast } from 'react-toastify';
 
+const configuredApiBase = process.env.REACT_APP_API_URL || '/api';
+const apiBase = configuredApiBase.replace(/\/$/, '');
+
 // Function to check if the backend server is running
 export const checkServerStatus = async () => {
   try {
-    const response = await fetch('/api', { 
+    const response = await fetch(`${apiBase}/health`, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
       // Short timeout to quickly determine if server is available

@@ -1,8 +1,11 @@
 import axios from 'axios';
 
+const configuredApiBase = process.env.REACT_APP_API_URL || '/api';
+const baseURL = configuredApiBase.replace(/\/$/, '');
+
 // Create an axios instance with default config
 const api = axios.create({
-  baseURL: '/api',
+  baseURL,
   timeout: 10000,
 });
 

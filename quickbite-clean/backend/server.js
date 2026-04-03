@@ -31,6 +31,11 @@ app.use('/api/menus', menuRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
 
+// Health check route for uptime probes and frontend availability checks
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'API is healthy' });
+});
+
 // Root route
 app.get('/', (req, res) => {
   res.send('Food Delivery API is running');
@@ -42,7 +47,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log(`MongoDB connected: ${process.env.MONGO_URI}`))
+  .then(() => console.log('MongoDB connected'))
   .catch((err) => {
     console.error('MongoDB connection error:', err);
     process.exit(1); // Exit with failure
