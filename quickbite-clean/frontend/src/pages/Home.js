@@ -22,6 +22,28 @@ const Home = () => {
   const [sortBy, setSortBy] = useState('relevance');
   const { isFavorite, toggleFavorite } = useFavorites();
 
+  const buildFallbackRestaurants = () => {
+    const fallback = [
+      { _id: 'rest1', name: 'Tiamo', cuisine: ['Italian', 'European'], priceRange: '$$$', rating: 4.6, numReviews: 150 },
+      { _id: 'rest2', name: 'Shri Sagar CTR', cuisine: ['South Indian', 'Vegetarian'], priceRange: '$', rating: 4.5, numReviews: 200 },
+      { _id: 'rest3', name: 'Kuuraku', cuisine: ['Japanese', 'Asian'], priceRange: '$$', rating: 4.4, numReviews: 120 },
+      { _id: 'rest4', name: 'Geist Brewing Co., OMR', cuisine: ['Brewery', 'Continental'], priceRange: '$$$', rating: 4.3, numReviews: 180 },
+      { _id: 'rest5', name: 'Toit', cuisine: ['Brewery', 'Continental'], priceRange: '$$', rating: 4.4, numReviews: 190 }
+    ];
+
+    return fallback.map((restaurant) => {
+      const location = getLocationForRestaurant(restaurant._id);
+      return {
+        ...restaurant,
+        location,
+        deliveryTime: getDeliveryTime(restaurant.priceRange),
+        isTopPick: restaurant.rating >= 4.5 && restaurant.numReviews >= 100,
+        priceRange: convertPriceRange(restaurant.priceRange),
+        image: `https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80`
+      };
+    });
+  };
+
   // Enhanced location mapping for restaurants
   const getLocationForRestaurant = (restaurantId) => {
     const locations = [
@@ -62,12 +84,12 @@ const Home = () => {
         setLoading(true);
         const response = await api.get('/restaurants?limit=50');
         
-        if (response.data.success && response.data.data) {
+        if (response.data.success && Array.isArray(response.data.data) && response.data.data.length > 0) {
           // Enhance restaurant data with additional fields
           const enhancedRestaurants = response.data.data.map(restaurant => {
-            const location = getLocationForRestaurant(restaurant._id, restaurant.name);
+            const location = getLocationForRestaurant(restaurant._id);
             const priceRange = convertPriceRange(restaurant.priceRange);
-            const deliveryTime = getDeliveryTime(restaurant.priceRange, location);
+            const deliveryTime = getDeliveryTime(restaurant.priceRange);
             const isTopPick = restaurant.rating >= 4.5 && restaurant.numReviews >= 100;
             
             return {
@@ -83,12 +105,12 @@ const Home = () => {
           
           setRestaurants(enhancedRestaurants);
         } else {
-          console.warn('No restaurant data received from API');
-          setRestaurants([]);
+          console.warn('No restaurant data received from API. Falling back to local data.');
+          setRestaurants(buildFallbackRestaurants());
         }
       } catch (error) {
         console.error('Error fetching restaurants:', error);
-        setRestaurants([]);
+        setRestaurants(buildFallbackRestaurants());
       } finally {
         setLoading(false);
       }
